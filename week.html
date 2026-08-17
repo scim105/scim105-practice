@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCIM 105 · Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">py</div>
+  <div class="brand">
+    <h1 id="week-heading">SCIM 105 · Week</h1>
+    <p id="week-sub">…</p>
+  </div>
+  <div class="topbar-right">
+    <a class="btn small ghost" href="index.html">← All weeks</a>
+    <div class="pts">⭐ <b id="points">0</b> pts</div>
+    <div class="who" data-who></div>
+    <a class="btn small ghost hidden" data-admin-link href="admin.html">Admin</a>
+    <button class="btn small" data-signout>Sign out</button>
+  </div>
+</header>
+<div class="banner"><span class="dot">●</span><span id="signed-line"></span></div>
+
+<main class="split">
+  <aside class="path">
+    <h4>Your path</h4>
+    <div id="path"></div>
+  </aside>
+
+  <section class="work">
+    <div id="empty" class="panel hidden">
+      <h3>Nothing here yet</h3>
+      <p class="hint">This week has no active problems. Add some from the Admin page.</p>
+    </div>
+
+    <div id="problem-area" class="hidden">
+      <div class="prompt">
+        <div class="crumbs" id="crumbs"></div>
+        <h2 id="p-title"></h2>
+        <div class="statement" id="p-statement"></div>
+        <div class="example" id="p-example"></div>
+      </div>
+
+      <div class="editor-shell">
+        <div class="editor-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="fname" id="fname">solution.py</span>
+        </div>
+        <textarea id="code" class="fallback-editor" spellcheck="false"></textarea>
+      </div>
+
+      <div class="run-row">
+        <button class="btn primary" id="run">▶ Run tests</button>
+        <button class="btn" id="reset">Reset code</button>
+        <span class="status" id="status"></span>
+      </div>
+
+      <div id="results"></div>
+    </div>
+  </section>
+</main>
+
+<!-- The test harness that runs inside the browser's Python (Pyodide). -->
+<script type="text/x-python" id="harness">
+import json, sys, io, time
+
+def _scim_cmp(got, exp):
+    if isinstance(exp, bool) or isinstance(got, bool):
+        return isinstance(exp, bool) and isinstance(got, bool) and exp == got
+    if isinstance(exp, (int, float)) and isinstance(got, (int, float)):
+        return abs(float(got) - float(exp)) <= 1e-6 * max(1.0, abs(float(exp)))
+    if isinstance(exp, list):
+        if not isinstance(got, (list, tuple)) or len(got) != len(exp):
+            return False
+        return all(_scim_cmp(g, e) for g, e in zip(got, exp))
+    if isinstance(exp, dict):
+        if not isinstance(got, dict) or set(got.keys()) != set(exp.keys()):
+            return False
+        return all(_scim_cmp(got[k], exp[k]) for k in exp)
+    if exp is None:
+        return got is None
+    return got == exp
+
+def _scim_label(t):
+    if 'expr' in t:
+        return t['expr']
+    return '%s(%s)' % (t['call'], ', '.join(repr(a) for a in t.get('args', [])))
+
+def _scim_run(code, setup, tests_json, limit):
+    tests = json.loads(tests_json)
+    ns = {'__name__': '__main__'}
+    if setup:
+        try:
+            exec(setup, ns)
+        except Exception as e:
+            return json.dumps({'error': 'Course setup failed - %s: %s' % (type(e).__name__, e)})
+    buf = io.StringIO()
+    real_stdout = sys.stdout
+    deadline = [time.time() + limit]
+
+    def _tracer(frame, event, arg):
+        if time.time() > deadline[0]:
+            raise TimeoutError('your program ran too long - check for a loop that never ends')
+        return _tracer
+
+    results = []
+    sys.stdout = buf
+    try:
+        sys.settrace(_tracer)
+        try:
+            exec(code, ns)
+        except Exception as e:
+            return json.dumps({'error': '%s: %s' % (type(e).__name__, e), 'stdout': buf.getvalue()})
+        for t in tests:
+            label = _scim_label(t)
+            deadline[0] = time.time() + limit
+            sys.settrace(_tracer)      # re-arm: a raised timeout switches tracing off
+            try:
+                if 'expr' in t:
+                    got = eval(t['expr'], ns)
+                else:
+                    fn = ns.get(t['call'])
+                    if not callable(fn):
+                        raise NameError("there is no function called '%s'" % t['call'])
+                    got = fn(*t.get('args', []))
+                results.append({'label': label, 'expected': repr(t.get('expected')),
+                                'got': repr(got), 'ok': _scim_cmp(got, t.get('expected'))})
+            except Exception as e:
+                results.append({'label': label, 'expected': repr(t.get('expected')),
+                                'got': '%s: %s' % (type(e).__name__, e), 'ok': False})
+    finally:
+        sys.settrace(None)
+        sys.stdout = real_stdout
+    return json.dumps({'results': results, 'stdout': buf.getvalue()})
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(async function () {
+  const S = window.SCIM;
+  if (!S.configured) { location.href = "index.html"; return; }
+
+  const weekNo = parseInt(new URLSearchParams(location.search).get("week") || "1", 10);
+  const ctx = await S.getSession();
+  if (!ctx) { location.href = "index.html"; return; }
+  S.fillHeader(ctx);
+  document.getElementById("signed-line").textContent =
+    "Signed in as " + ctx.email + " — every attempt and score is saved.";
+
+  /* ---------------- load content ---------------- */
+  const [weekRes, probRes, allProbRes, passRes] = await Promise.all([
+    S.sb.from("weeks").select("*").eq("week_no", weekNo).maybeSingle(),
+    S.sb.from("problems").select("*").eq("week_no", weekNo).eq("is_active", true)
+        .order("level").order("sort_order"),
+    S.sb.from("problems").select("slug,points").eq("is_active", true),
+    S.sb.from("attempts").select("problem_id").eq("passed", true)
+  ]);
+
+  const week = weekRes.data || { week_no: weekNo, title: "Week " + weekNo, subtitle: "" };
+  const problems = probRes.data || [];
+  const pointsBySlug = {};
+  (allProbRes.data || []).forEach(p => { pointsBySlug[p.slug] = p.points; });
+  const solved = new Set((passRes.data || []).map(a => a.problem_id));
+
+  document.getElementById("week-heading").textContent =
+    S.cfg.COURSE_CODE + " · Week " + week.week_no;
+  document.getElementById("week-sub").textContent = week.title;
+  document.title = S.cfg.COURSE_CODE + " · Week " + week.week_no;
+
+  function refreshPoints() {
+    let total = 0;
+    solved.forEach(slug => { total += pointsBySlug[slug] || 0; });
+    document.getElementById("points").textContent = total;
+  }
+  refreshPoints();
+
+  if (!problems.length) {
+    document.getElementById("empty").classList.remove("hidden");
+    return;
+  }
+  document.getElementById("problem-area").classList.remove("hidden");
+
+  /* ---------------- levels & locking ---------------- */
+  const levels = [];
+  problems.forEach(p => {
+    let lv = levels.find(l => l.level === p.level);
+    if (!lv) {
+      lv = { level: p.level, title: p.level_title || ("Level " + p.level),
+             subtitle: p.level_subtitle || "", items: [] };
+      levels.push(lv);
+    }
+    lv.items.push(p);
+  });
+  levels.sort((a, b) => a.level - b.level);
+
+  const isUnlocked = (index) => {
+    if (index === 0) return true;
+    return levels[index - 1].items.every(p => solved.has(p.slug));
+  };
+
+  let current = null;
+
+  function renderPath() {
+    const html = levels.map((lv, i) => {
+      const unlocked = isUnlocked(i);
+      const items = lv.items.map(p => {
+        const cls = ["pitem"];
+        if (solved.has(p.slug)) cls.push("solved");
+        if (!unlocked) cls.push("locked");
+        if (current && current.id === p.id) cls.push("active");
+        return '<li class="' + cls.join(" ") + '" data-slug="' + S.esc(p.slug) + '">' +
+               '<span class="ring"></span><span>' + S.esc(p.title) + "</span>" +
+               (unlocked ? "" : '<span class="lock">🔒</span>') + "</li>";
+      }).join("");
+      return '<div class="level ' + (unlocked ? "unlocked" : "locked") + '">' +
+             '<div class="level-head"><div class="level-num">' + lv.level + "</div><div>" +
+             "<b>Week " + week.week_no + " · " + S.esc(lv.title) + "</b>" +
+             "<span>" + (unlocked ? S.esc(lv.subtitle) : "Finish the level above to unlock") + "</span>" +
+             '</div></div><ul class="plist">' + items + "</ul></div>";
+    }).join("");
+    const box = document.getElementById("path");
+    box.innerHTML = html;
+    box.querySelectorAll(".pitem").forEach(el => {
+      el.onclick = () => {
+        if (el.classList.contains("locked")) {
+          S.toast("Finish the level above first 🔒");
+          return;
+        }
+        select(problems.find(p => p.slug === el.dataset.slug));
+      };
+    });
+  }
+
+  /* ---------------- editor ---------------- */
+  let cm = null;
+  const textarea = document.getElementById("code");
+  if (window.CodeMirror) {
+    cm = CodeMirror.fromTextArea(textarea, {
+      mode: "python", theme: "material-darker", lineNumbers: true,
+      indentUnit: 4, tabSize: 4, indentWithTabs: false, lineWrapping: true,
+      extraKeys: { Tab: (c) => c.replaceSelection("    ") }
+    });
+  }
+  const getCode = () => (cm ? cm.getValue() : textarea.value);
+  const setCode = (v) => { cm ? cm.setValue(v) : (textarea.value = v); };
+  const draftKey = (p) => "scim105:draft:" + p.slug;
+  let saveTimer = null;
+  const onEdit = () => {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      if (current) localStorage.setItem(draftKey(current), getCode());
+    }, 400);
+  };
+  cm ? cm.on("change", onEdit) : textarea.addEventListener("input", onEdit);
+
+  /* ---------------- show one problem ---------------- */
+  function select(p) {
+    if (!p) return;
+    current = p;
+    document.getElementById("crumbs").textContent =
+      "Level " + p.level + " · Week " + week.week_no + " · " + (p.level_title || "");
+    document.getElementById("p-title").textContent = p.title;
+    document.getElementById("p-statement").innerHTML = p.statement;
+    document.getElementById("p-example").textContent = p.example || "";
+    document.getElementById("fname").textContent = (p.entry_name || "solution") + ".py";
+    document.getElementById("results").innerHTML = "";
+    document.getElementById("status").textContent = "";
+    setCode(localStorage.getItem(draftKey(p)) || p.starter_code || "");
+    renderPath();
+    if (cm) setTimeout(() => cm.refresh(), 30);
+  }
+
+  const firstUnsolved = () => {
+    for (let i = 0; i < levels.length; i++) {
+      if (!isUnlocked(i)) break;
+      const item = levels[i].items.find(p => !solved.has(p.slug));
+      if (item) return item;
+    }
+    return problems[0];
+  };
+  select(firstUnsolved());
+
+  /* ---------------- Python in the browser ---------------- */
+  let pyodide = null;
+  function loadScript(src) {
+    return new Promise((ok, bad) => {
+      const s = document.createElement("script");
+      s.src = src; s.onload = ok; s.onerror = () => bad(new Error("Could not load " + src));
+      document.head.appendChild(s);
+    });
+  }
+  async function python(setStatus) {
+    if (pyodide) return pyodide;
+    setStatus("Starting Python in your browser… (first run only)");
+    if (!window.loadPyodide) {
+      await loadScript("https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js");
+    }
+    pyodide = await loadPyodide({ indexURL: "https://cdn.jsdelivr.net/pyodide/v0.26.4/full/" });
+    pyodide.runPython(document.getElementById("harness").textContent);
+    return pyodide;
+  }
+
+  const runBtn = document.getElementById("run");
+  const statusEl = document.getElementById("status");
+  const setStatus = (t) => { statusEl.textContent = t; };
+
+  document.getElementById("reset").onclick = () => {
+    if (!current) return;
+    if (!confirm("Replace your code with the original starter code?")) return;
+    localStorage.removeItem(draftKey(current));
+    setCode(current.starter_code || "");
+  };
+
+  runBtn.onclick = async function () {
+    if (!current) return;
+    const code = getCode();
+    runBtn.disabled = true;
+    document.getElementById("results").innerHTML = "";
+    try {
+      const py = await python(setStatus);
+      setStatus("Running your code…");
+      const runner = py.globals.get("_scim_run");
+      const raw = runner(code, current.setup_code || "",
+                         JSON.stringify(current.tests || []),
+                         S.cfg.RUN_TIMEOUT_SECONDS || 6);
+      runner.destroy && runner.destroy();
+      const out = JSON.parse(raw);
+      setStatus("");
+      showResults(out, code);
+    } catch (err) {
+      setStatus("");
+      document.getElementById("results").innerHTML =
+        '<div class="result-head fail"><div class="msg">Could not run your code: ' +
+        S.esc(err.message) + "</div></div>";
+    } finally {
+      runBtn.disabled = false;
+    }
+  };
+
+  function showResults(out, code) {
+    const box = document.getElementById("results");
+    const tests = (current.tests || []).length;
+
+    if (out.error) {
+      box.innerHTML =
+        '<div class="result-head fail"><div class="score">0/' + tests + "</div>" +
+        '<div class="msg">Your program could not start — fix the error below.</div></div>' +
+        '<div class="stdout">' + S.esc(out.error) + "</div>";
+      save(false, 0, tests, code);
+      return;
+    }
+
+    const results = out.results || [];
+    const passedCount = results.filter(r => r.ok).length;
+    const allPassed = tests > 0 && passedCount === tests;
+
+    let html =
+      '<div class="result-head ' + (allPassed ? "pass" : "fail") + '">' +
+      '<div class="score">' + passedCount + "/" + tests + "</div>" +
+      '<div class="msg">' + (allPassed
+        ? "All tests passed. Well done! +" + (current.points || 0) + " pts"
+        : passedCount + " of " + tests + " tests passed. Keep going!") + "</div></div>";
+
+    html += results.map(r =>
+      '<div class="tcase ' + (r.ok ? "ok" : "no") + '"><div class="mark">' +
+      (r.ok ? "✓" : "✕") + '</div><div class="body">' + S.esc(r.label) +
+      '<div class="sub"><b>expected</b> ' + S.esc(r.expected) +
+      (r.ok ? "" : " · <b>got</b> " + S.esc(r.got)) + "</div></div></div>").join("");
+
+    if (out.stdout && out.stdout.trim()) {
+      html += '<div class="stdout">Printed output:\n' + S.esc(out.stdout) + "</div>";
+    }
+    box.innerHTML = html;
+
+    const wasSolved = solved.has(current.slug);
+    if (allPassed) solved.add(current.slug);
+    save(allPassed, passedCount, tests, code);
+    if (allPassed && !wasSolved) {
+      refreshPoints();
+      S.toast("Solved! +" + (current.points || 0) + " points 🎉", "ok");
+    }
+    renderPath();
+  }
+
+  async function save(passed, score, total, code) {
+    const { error } = await S.sb.from("attempts").insert({
+      user_id: ctx.user.id, email: ctx.email, full_name: ctx.name,
+      week_no: week.week_no, problem_id: current.slug, level: current.level,
+      passed: passed, score: score, total_tests: total, code: code
+    });
+    if (error) S.toast("Could not save this attempt: " + error.message, "err");
+  }
+})();
+</script>
+</body>
+</html>

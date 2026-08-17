@@ -1,0 +1,4853 @@
+{
+ "weeks": [
+  {
+   "week_no": 1,
+   "title": "Data Representation I",
+   "subtitle": "Numbers, strings, variables & lists",
+   "is_open": true
+  },
+  {
+   "week_no": 2,
+   "title": "Data Representation II",
+   "subtitle": "Lists, dictionaries & arrays",
+   "is_open": true
+  },
+  {
+   "week_no": 3,
+   "title": "Algorithm Design",
+   "subtitle": "Step-by-step problem solving",
+   "is_open": false
+  },
+  {
+   "week_no": 4,
+   "title": "Functions",
+   "subtitle": "Defining, calling & reusing code",
+   "is_open": false
+  },
+  {
+   "week_no": 5,
+   "title": "Math & Logical Operators",
+   "subtitle": "Arithmetic, comparison & boolean logic",
+   "is_open": false
+  },
+  {
+   "week_no": 6,
+   "title": "Conditional Statements",
+   "subtitle": "if / elif / else",
+   "is_open": false
+  },
+  {
+   "week_no": 7,
+   "title": "Conditionals & Loops",
+   "subtitle": "Deciding and repeating together",
+   "is_open": false
+  },
+  {
+   "week_no": 8,
+   "title": "Midterm Review",
+   "subtitle": "Mixed practice for the midterm",
+   "is_open": false
+  },
+  {
+   "week_no": 9,
+   "title": "Loop Control I",
+   "subtitle": "for, while, break & continue",
+   "is_open": false
+  },
+  {
+   "week_no": 10,
+   "title": "Loop Control II",
+   "subtitle": "Nested loops & accumulators",
+   "is_open": false
+  },
+  {
+   "week_no": 11,
+   "title": "Basic OOP I",
+   "subtitle": "Classes, objects & attributes",
+   "is_open": false
+  },
+  {
+   "week_no": 12,
+   "title": "Basic OOP II",
+   "subtitle": "Methods, __str__ & inheritance",
+   "is_open": false
+  },
+  {
+   "week_no": 13,
+   "title": "File Input/Output I",
+   "subtitle": "Reading and writing text files",
+   "is_open": false
+  },
+  {
+   "week_no": 14,
+   "title": "File Input/Output II",
+   "subtitle": "CSV files & data records",
+   "is_open": false
+  },
+  {
+   "week_no": 15,
+   "title": "Group Project",
+   "subtitle": "Presentation week - no practice set",
+   "is_open": false
+  }
+ ],
+ "problems": [
+  {
+   "week_no": 1,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w01-add-two-numbers",
+   "title": "Add two numbers",
+   "statement": "Write <code>add(a, b)</code> that returns the sum of the two numbers.",
+   "example": "add(2, 3)  ->  5",
+   "entry_name": "add",
+   "starter_code": "def add(a, b):\n    # return a plus b\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "add",
+     "args": [
+      2,
+      3
+     ],
+     "expected": 5
+    },
+    {
+     "call": "add",
+     "args": [
+      10,
+      -4
+     ],
+     "expected": 6
+    },
+    {
+     "call": "add",
+     "args": [
+      0,
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "call": "add",
+     "args": [
+      1.5,
+      2.5
+     ],
+     "expected": 4.0
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 1,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w01-rectangle-area",
+   "title": "Area of a rectangle",
+   "statement": "Write <code>rectangle_area(width, height)</code> that returns the area (width &times; height).",
+   "example": "rectangle_area(3, 4)  ->  12",
+   "entry_name": "rectangle_area",
+   "starter_code": "def rectangle_area(width, height):\n    # return width times height\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "rectangle_area",
+     "args": [
+      3,
+      4
+     ],
+     "expected": 12
+    },
+    {
+     "call": "rectangle_area",
+     "args": [
+      5,
+      5
+     ],
+     "expected": 25
+    },
+    {
+     "call": "rectangle_area",
+     "args": [
+      1,
+      10
+     ],
+     "expected": 10
+    },
+    {
+     "call": "rectangle_area",
+     "args": [
+      0,
+      7
+     ],
+     "expected": 0
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 1,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w01-f-to-c",
+   "title": "Fahrenheit to Celsius",
+   "statement": "Write <code>to_celsius(f)</code> that converts a Fahrenheit temperature to Celsius using <code>(f - 32) * 5 / 9</code>. Round the answer to 2 decimal places.",
+   "example": "to_celsius(212)  ->  100.0",
+   "entry_name": "to_celsius",
+   "starter_code": "def to_celsius(f):\n    # use round(value, 2)\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "to_celsius",
+     "args": [
+      212
+     ],
+     "expected": 100.0
+    },
+    {
+     "call": "to_celsius",
+     "args": [
+      32
+     ],
+     "expected": 0.0
+    },
+    {
+     "call": "to_celsius",
+     "args": [
+      98.6
+     ],
+     "expected": 37.0
+    },
+    {
+     "call": "to_celsius",
+     "args": [
+      -40
+     ],
+     "expected": -40.0
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 1,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w01-greet-by-name",
+   "title": "Greet by name",
+   "statement": "Write <code>greet(name)</code> that returns the text <code>Hello, NAME!</code>.",
+   "example": "greet('Ana')  ->  'Hello, Ana!'",
+   "entry_name": "greet",
+   "starter_code": "def greet(name):\n    # build the text with an f-string\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "greet",
+     "args": [
+      "Ana"
+     ],
+     "expected": "Hello, Ana!"
+    },
+    {
+     "call": "greet",
+     "args": [
+      "Somchai"
+     ],
+     "expected": "Hello, Somchai!"
+    },
+    {
+     "call": "greet",
+     "args": [
+      "Kittisak"
+     ],
+     "expected": "Hello, Kittisak!"
+    },
+    {
+     "call": "greet",
+     "args": [
+      ""
+     ],
+     "expected": "Hello, !"
+    }
+   ],
+   "points": 10,
+   "sort_order": 4
+  },
+  {
+   "week_no": 1,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w01-is-even",
+   "title": "Is it even?",
+   "statement": "Write <code>is_even(n)</code> that returns <code>True</code> when n is an even number, otherwise <code>False</code>.",
+   "example": "is_even(4)  ->  True",
+   "entry_name": "is_even",
+   "starter_code": "def is_even(n):\n    # a number is even when n % 2 == 0\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "is_even",
+     "args": [
+      4
+     ],
+     "expected": true
+    },
+    {
+     "call": "is_even",
+     "args": [
+      7
+     ],
+     "expected": false
+    },
+    {
+     "call": "is_even",
+     "args": [
+      0
+     ],
+     "expected": true
+    },
+    {
+     "call": "is_even",
+     "args": [
+      -3
+     ],
+     "expected": false
+    }
+   ],
+   "points": 10,
+   "sort_order": 5
+  },
+  {
+   "week_no": 1,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w01-average-of-list",
+   "title": "Average of a list",
+   "statement": "Write <code>average(nums)</code> that returns the average (mean) of a list of numbers. Return <code>0</code> if the list is empty.",
+   "example": "average([1, 2, 3, 4])  ->  2.5",
+   "entry_name": "average",
+   "starter_code": "def average(nums):\n    # sum(nums) / len(nums), but check for an empty list first\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "average",
+     "args": [
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "expected": 2.5
+    },
+    {
+     "call": "average",
+     "args": [
+      [
+       10
+      ]
+     ],
+     "expected": 10.0
+    },
+    {
+     "call": "average",
+     "args": [
+      []
+     ],
+     "expected": 0
+    },
+    {
+     "call": "average",
+     "args": [
+      [
+       2.5,
+       3.5,
+       4.0
+      ]
+     ],
+     "expected": 3.3333333333333335
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 1,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w01-pass-or-fail",
+   "title": "Pass or fail",
+   "statement": "Write <code>pass_or_fail(score)</code> that returns <code>'Pass'</code> when the score is 50 or more, and <code>'Fail'</code> otherwise.",
+   "example": "pass_or_fail(75)  ->  'Pass'",
+   "entry_name": "pass_or_fail",
+   "starter_code": "def pass_or_fail(score):\n    # use an if / else statement\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "pass_or_fail",
+     "args": [
+      75
+     ],
+     "expected": "Pass"
+    },
+    {
+     "call": "pass_or_fail",
+     "args": [
+      50
+     ],
+     "expected": "Pass"
+    },
+    {
+     "call": "pass_or_fail",
+     "args": [
+      49
+     ],
+     "expected": "Fail"
+    },
+    {
+     "call": "pass_or_fail",
+     "args": [
+      0
+     ],
+     "expected": "Fail"
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 1,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w01-count-above",
+   "title": "Count above a threshold",
+   "statement": "Write <code>count_above(nums, threshold)</code> that returns how many numbers in the list are strictly greater than the threshold.",
+   "example": "count_above([1, 5, 9, 3], 4)  ->  2",
+   "entry_name": "count_above",
+   "starter_code": "def count_above(nums, threshold):\n    # loop through the list and count\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "count_above",
+     "args": [
+      [
+       1,
+       5,
+       9,
+       3
+      ],
+      4
+     ],
+     "expected": 2
+    },
+    {
+     "call": "count_above",
+     "args": [
+      [
+       10,
+       20,
+       30
+      ],
+      30
+     ],
+     "expected": 0
+    },
+    {
+     "call": "count_above",
+     "args": [
+      [],
+      5
+     ],
+     "expected": 0
+    },
+    {
+     "call": "count_above",
+     "args": [
+      [
+       -1,
+       -5,
+       0
+      ],
+      -2
+     ],
+     "expected": 2
+    }
+   ],
+   "points": 15,
+   "sort_order": 3
+  },
+  {
+   "week_no": 1,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w01-largest-in-list",
+   "title": "Largest in a list",
+   "statement": "Write <code>largest(nums)</code> that returns the biggest number in the list. Return <code>None</code> for an empty list.",
+   "example": "largest([3, 9, 2])  ->  9",
+   "entry_name": "largest",
+   "starter_code": "def largest(nums):\n    # keep track of the biggest value you have seen so far\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "largest",
+     "args": [
+      [
+       3,
+       9,
+       2
+      ]
+     ],
+     "expected": 9
+    },
+    {
+     "call": "largest",
+     "args": [
+      [
+       -5,
+       -1,
+       -9
+      ]
+     ],
+     "expected": -1
+    },
+    {
+     "call": "largest",
+     "args": [
+      [
+       7
+      ]
+     ],
+     "expected": 7
+    },
+    {
+     "call": "largest",
+     "args": [
+      []
+     ],
+     "expected": null
+    }
+   ],
+   "points": 15,
+   "sort_order": 4
+  },
+  {
+   "week_no": 1,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w01-reverse-text",
+   "title": "Reverse the text",
+   "statement": "Write <code>reverse_text(text)</code> that returns the text backwards.",
+   "example": "reverse_text('python')  ->  'nohtyp'",
+   "entry_name": "reverse_text",
+   "starter_code": "def reverse_text(text):\n    # slicing with text[::-1] reverses a string\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "reverse_text",
+     "args": [
+      "python"
+     ],
+     "expected": "nohtyp"
+    },
+    {
+     "call": "reverse_text",
+     "args": [
+      "Mahidol"
+     ],
+     "expected": "lodihaM"
+    },
+    {
+     "call": "reverse_text",
+     "args": [
+      ""
+     ],
+     "expected": ""
+    },
+    {
+     "call": "reverse_text",
+     "args": [
+      "ab"
+     ],
+     "expected": "ba"
+    }
+   ],
+   "points": 15,
+   "sort_order": 5
+  },
+  {
+   "week_no": 1,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w01-median",
+   "title": "Median of a list",
+   "statement": "Write <code>median(nums)</code> that returns the median. For an even number of values, return the average of the two middle values. Return <code>None</code> for an empty list.",
+   "example": "median([3, 1, 2])  ->  2",
+   "entry_name": "median",
+   "starter_code": "def median(nums):\n    # sort a copy of the list first, then look at the middle\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "median",
+     "args": [
+      [
+       3,
+       1,
+       2
+      ]
+     ],
+     "expected": 2
+    },
+    {
+     "call": "median",
+     "args": [
+      [
+       4,
+       1,
+       3,
+       2
+      ]
+     ],
+     "expected": 2.5
+    },
+    {
+     "call": "median",
+     "args": [
+      [
+       10
+      ]
+     ],
+     "expected": 10
+    },
+    {
+     "call": "median",
+     "args": [
+      []
+     ],
+     "expected": null
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 1,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w01-mode",
+   "title": "Mode (most frequent)",
+   "statement": "Write <code>mode(values)</code> that returns the value that appears most often. If several values tie, return the smallest of them. Return <code>None</code> for an empty list.",
+   "example": "mode([1, 2, 2, 3])  ->  2",
+   "entry_name": "mode",
+   "starter_code": "def mode(values):\n    # count each value in a dictionary, then find the highest count\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "mode",
+     "args": [
+      [
+       1,
+       2,
+       2,
+       3
+      ]
+     ],
+     "expected": 2
+    },
+    {
+     "call": "mode",
+     "args": [
+      [
+       1,
+       1,
+       2,
+       2
+      ]
+     ],
+     "expected": 1
+    },
+    {
+     "call": "mode",
+     "args": [
+      [
+       5
+      ]
+     ],
+     "expected": 5
+    },
+    {
+     "call": "mode",
+     "args": [
+      []
+     ],
+     "expected": null
+    }
+   ],
+   "points": 25,
+   "sort_order": 2
+  },
+  {
+   "week_no": 2,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w02-list-total",
+   "title": "Total of a list",
+   "statement": "Write <code>list_total(nums)</code> that returns the total of all numbers in the list.",
+   "example": "list_total([1, 2, 3])  ->  6",
+   "entry_name": "list_total",
+   "starter_code": "def list_total(nums):\n    # start at 0 and add each item\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "list_total",
+     "args": [
+      [
+       1,
+       2,
+       3
+      ]
+     ],
+     "expected": 6
+    },
+    {
+     "call": "list_total",
+     "args": [
+      []
+     ],
+     "expected": 0
+    },
+    {
+     "call": "list_total",
+     "args": [
+      [
+       -2,
+       2
+      ]
+     ],
+     "expected": 0
+    },
+    {
+     "call": "list_total",
+     "args": [
+      [
+       0.5,
+       0.25
+      ]
+     ],
+     "expected": 0.75
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 2,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w02-second-item",
+   "title": "The second item",
+   "statement": "Write <code>second_item(items)</code> that returns the item at index 1. Return <code>None</code> if the list is shorter than 2 items.",
+   "example": "second_item(['a', 'b', 'c'])  ->  'b'",
+   "entry_name": "second_item",
+   "starter_code": "def second_item(items):\n    # remember Python counts from 0\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "second_item",
+     "args": [
+      [
+       "a",
+       "b",
+       "c"
+      ]
+     ],
+     "expected": "b"
+    },
+    {
+     "call": "second_item",
+     "args": [
+      [
+       10,
+       20
+      ]
+     ],
+     "expected": 20
+    },
+    {
+     "call": "second_item",
+     "args": [
+      [
+       7
+      ]
+     ],
+     "expected": null
+    },
+    {
+     "call": "second_item",
+     "args": [
+      []
+     ],
+     "expected": null
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 2,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w02-price-of",
+   "title": "Look up a price",
+   "statement": "Write <code>price_of(prices, item)</code> that returns the price of the item from the dictionary, or <code>0</code> if the item is not in the dictionary.",
+   "example": "price_of({'tea': 25, 'coffee': 40}, 'coffee')  ->  40",
+   "entry_name": "price_of",
+   "starter_code": "def price_of(prices, item):\n    # dictionaries have a .get(key, default) method\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "price_of",
+     "args": [
+      {
+       "tea": 25,
+       "coffee": 40
+      },
+      "coffee"
+     ],
+     "expected": 40
+    },
+    {
+     "call": "price_of",
+     "args": [
+      {
+       "tea": 25
+      },
+      "milk"
+     ],
+     "expected": 0
+    },
+    {
+     "call": "price_of",
+     "args": [
+      {},
+      "tea"
+     ],
+     "expected": 0
+    },
+    {
+     "call": "price_of",
+     "args": [
+      {
+       "a": 1.5
+      },
+      "a"
+     ],
+     "expected": 1.5
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 2,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w02-word-counts",
+   "title": "Count the words",
+   "statement": "Write <code>word_counts(text)</code> that returns a dictionary mapping each word to how many times it appears. Words are separated by spaces.",
+   "example": "word_counts('a b a')  ->  {'a': 2, 'b': 1}",
+   "entry_name": "word_counts",
+   "starter_code": "def word_counts(text):\n    # text.split() gives you a list of words\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "word_counts",
+     "args": [
+      "a b a"
+     ],
+     "expected": {
+      "a": 2,
+      "b": 1
+     }
+    },
+    {
+     "call": "word_counts",
+     "args": [
+      "data science data science data"
+     ],
+     "expected": {
+      "data": 3,
+      "science": 2
+     }
+    },
+    {
+     "call": "word_counts",
+     "args": [
+      ""
+     ],
+     "expected": {}
+    },
+    {
+     "call": "word_counts",
+     "args": [
+      "one"
+     ],
+     "expected": {
+      "one": 1
+     }
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 2,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w02-unique-sorted",
+   "title": "Unique values, sorted",
+   "statement": "Write <code>unique_sorted(nums)</code> that returns a sorted list of the values, with duplicates removed.",
+   "example": "unique_sorted([3, 1, 3, 2])  ->  [1, 2, 3]",
+   "entry_name": "unique_sorted",
+   "starter_code": "def unique_sorted(nums):\n    # a set removes duplicates; sorted() puts them in order\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "unique_sorted",
+     "args": [
+      [
+       3,
+       1,
+       3,
+       2
+      ]
+     ],
+     "expected": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "call": "unique_sorted",
+     "args": [
+      [
+       5,
+       5,
+       5
+      ]
+     ],
+     "expected": [
+      5
+     ]
+    },
+    {
+     "call": "unique_sorted",
+     "args": [
+      []
+     ],
+     "expected": []
+    },
+    {
+     "call": "unique_sorted",
+     "args": [
+      [
+       -1,
+       0,
+       -1,
+       2
+      ]
+     ],
+     "expected": [
+      -1,
+      0,
+      2
+     ]
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 2,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w02-merge-totals",
+   "title": "Merge two dictionaries",
+   "statement": "Write <code>merge_totals(a, b)</code> that returns one dictionary containing every key from both. If a key is in both, add the two values together.",
+   "example": "merge_totals({'x': 1}, {'x': 2, 'y': 3})  ->  {'x': 3, 'y': 3}",
+   "entry_name": "merge_totals",
+   "starter_code": "def merge_totals(a, b):\n    # start from a copy of a, then loop over b\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "merge_totals",
+     "args": [
+      {
+       "x": 1
+      },
+      {
+       "x": 2,
+       "y": 3
+      }
+     ],
+     "expected": {
+      "x": 3,
+      "y": 3
+     }
+    },
+    {
+     "call": "merge_totals",
+     "args": [
+      {},
+      {
+       "a": 1
+      }
+     ],
+     "expected": {
+      "a": 1
+     }
+    },
+    {
+     "call": "merge_totals",
+     "args": [
+      {
+       "a": 1
+      },
+      {}
+     ],
+     "expected": {
+      "a": 1
+     }
+    },
+    {
+     "call": "merge_totals",
+     "args": [
+      {
+       "p": 2,
+       "q": 1
+      },
+      {
+       "q": 4
+      }
+     ],
+     "expected": {
+      "p": 2,
+      "q": 5
+     }
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 3,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w03-swap",
+   "title": "Swap two values",
+   "statement": "Write <code>swap(pair)</code> that takes a list of two items and returns a new list with them in the opposite order.",
+   "example": "swap([1, 2])  ->  [2, 1]",
+   "entry_name": "swap",
+   "starter_code": "def swap(pair):\n    # return a new list, do not change the original\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "swap",
+     "args": [
+      [
+       1,
+       2
+      ]
+     ],
+     "expected": [
+      2,
+      1
+     ]
+    },
+    {
+     "call": "swap",
+     "args": [
+      [
+       "a",
+       "b"
+      ]
+     ],
+     "expected": [
+      "b",
+      "a"
+     ]
+    },
+    {
+     "call": "swap",
+     "args": [
+      [
+       0,
+       0
+      ]
+     ],
+     "expected": [
+      0,
+      0
+     ]
+    },
+    {
+     "call": "swap",
+     "args": [
+      [
+       true,
+       false
+      ]
+     ],
+     "expected": [
+      false,
+      true
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 3,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w03-min-max",
+   "title": "Smallest and largest",
+   "statement": "Write <code>min_max(nums)</code> that returns a list <code>[smallest, largest]</code>. Return <code>None</code> for an empty list.",
+   "example": "min_max([3, 1, 4])  ->  [1, 4]",
+   "entry_name": "min_max",
+   "starter_code": "def min_max(nums):\n    # one pass through the list is enough\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "min_max",
+     "args": [
+      [
+       3,
+       1,
+       4
+      ]
+     ],
+     "expected": [
+      1,
+      4
+     ]
+    },
+    {
+     "call": "min_max",
+     "args": [
+      [
+       7
+      ]
+     ],
+     "expected": [
+      7,
+      7
+     ]
+    },
+    {
+     "call": "min_max",
+     "args": [
+      [
+       -2,
+       -9,
+       0
+      ]
+     ],
+     "expected": [
+      -9,
+      0
+     ]
+    },
+    {
+     "call": "min_max",
+     "args": [
+      []
+     ],
+     "expected": null
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 3,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w03-find-index",
+   "title": "Linear search",
+   "statement": "Write <code>find_index(items, target)</code> that returns the position of the first matching item, or <code>-1</code> if it is not there.",
+   "example": "find_index([4, 8, 15], 8)  ->  1",
+   "entry_name": "find_index",
+   "starter_code": "def find_index(items, target):\n    # use enumerate() or a counter variable\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "find_index",
+     "args": [
+      [
+       4,
+       8,
+       15
+      ],
+      8
+     ],
+     "expected": 1
+    },
+    {
+     "call": "find_index",
+     "args": [
+      [
+       "a",
+       "b"
+      ],
+      "c"
+     ],
+     "expected": -1
+    },
+    {
+     "call": "find_index",
+     "args": [
+      [],
+      1
+     ],
+     "expected": -1
+    },
+    {
+     "call": "find_index",
+     "args": [
+      [
+       1,
+       2,
+       1
+      ],
+      1
+     ],
+     "expected": 0
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 3,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w03-sort-numbers",
+   "title": "Sort a list yourself",
+   "statement": "Write <code>sort_numbers(nums)</code> that returns a new list sorted from smallest to largest. Try writing the algorithm by hand (bubble sort or selection sort).",
+   "example": "sort_numbers([3, 1, 2])  ->  [1, 2, 3]",
+   "entry_name": "sort_numbers",
+   "starter_code": "def sort_numbers(nums):\n    # repeatedly swap neighbours that are in the wrong order\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "sort_numbers",
+     "args": [
+      [
+       3,
+       1,
+       2
+      ]
+     ],
+     "expected": [
+      1,
+      2,
+      3
+     ]
+    },
+    {
+     "call": "sort_numbers",
+     "args": [
+      [
+       5,
+       4,
+       3,
+       2,
+       1
+      ]
+     ],
+     "expected": [
+      1,
+      2,
+      3,
+      4,
+      5
+     ]
+    },
+    {
+     "call": "sort_numbers",
+     "args": [
+      []
+     ],
+     "expected": []
+    },
+    {
+     "call": "sort_numbers",
+     "args": [
+      [
+       2,
+       2,
+       1
+      ]
+     ],
+     "expected": [
+      1,
+      2,
+      2
+     ]
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 3,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w03-binary-search",
+   "title": "Binary search",
+   "statement": "Write <code>binary_search(sorted_nums, target)</code> that returns the index of the target in an already sorted list, or <code>-1</code>. Halve the search range each step.",
+   "example": "binary_search([1, 3, 5, 7, 9], 7)  ->  3",
+   "entry_name": "binary_search",
+   "starter_code": "def binary_search(sorted_nums, target):\n    # keep a low and a high index and look at the middle\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "binary_search",
+     "args": [
+      [
+       1,
+       3,
+       5,
+       7,
+       9
+      ],
+      7
+     ],
+     "expected": 3
+    },
+    {
+     "call": "binary_search",
+     "args": [
+      [
+       1,
+       3,
+       5
+      ],
+      2
+     ],
+     "expected": -1
+    },
+    {
+     "call": "binary_search",
+     "args": [
+      [],
+      1
+     ],
+     "expected": -1
+    },
+    {
+     "call": "binary_search",
+     "args": [
+      [
+       2
+      ],
+      2
+     ],
+     "expected": 0
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 3,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w03-fizzbuzz",
+   "title": "FizzBuzz",
+   "statement": "Write <code>fizzbuzz(n)</code> that returns a list for 1..n where multiples of 3 become <code>'Fizz'</code>, multiples of 5 become <code>'Buzz'</code>, multiples of both become <code>'FizzBuzz'</code>, and everything else stays a number.",
+   "example": "fizzbuzz(5)  ->  [1, 2, 'Fizz', 4, 'Buzz']",
+   "entry_name": "fizzbuzz",
+   "starter_code": "def fizzbuzz(n):\n    # check the 'both' case first\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "fizzbuzz",
+     "args": [
+      5
+     ],
+     "expected": [
+      1,
+      2,
+      "Fizz",
+      4,
+      "Buzz"
+     ]
+    },
+    {
+     "call": "fizzbuzz",
+     "args": [
+      15
+     ],
+     "expected": [
+      1,
+      2,
+      "Fizz",
+      4,
+      "Buzz",
+      "Fizz",
+      7,
+      8,
+      "Fizz",
+      "Buzz",
+      11,
+      "Fizz",
+      13,
+      14,
+      "FizzBuzz"
+     ]
+    },
+    {
+     "call": "fizzbuzz",
+     "args": [
+      1
+     ],
+     "expected": [
+      1
+     ]
+    },
+    {
+     "call": "fizzbuzz",
+     "args": [
+      0
+     ],
+     "expected": []
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 4,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w04-square",
+   "title": "Square a number",
+   "statement": "Write <code>square(x)</code> that returns x multiplied by itself.",
+   "example": "square(4)  ->  16",
+   "entry_name": "square",
+   "starter_code": "def square(x):\n    # x * x, or x ** 2\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "square",
+     "args": [
+      4
+     ],
+     "expected": 16
+    },
+    {
+     "call": "square",
+     "args": [
+      -3
+     ],
+     "expected": 9
+    },
+    {
+     "call": "square",
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "call": "square",
+     "args": [
+      1.5
+     ],
+     "expected": 2.25
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 4,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w04-greet-default",
+   "title": "A default argument",
+   "statement": "Write <code>greet(name, greeting='Hello')</code> that returns <code>GREETING, NAME!</code>. If the caller gives no greeting, use <code>Hello</code>.",
+   "example": "greet('Ana')  ->  'Hello, Ana!'",
+   "entry_name": "greet",
+   "starter_code": "def greet(name, greeting='Hello'):\n    # default values go in the def line\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "greet",
+     "args": [
+      "Ana"
+     ],
+     "expected": "Hello, Ana!"
+    },
+    {
+     "call": "greet",
+     "args": [
+      "Ana",
+      "Sawasdee"
+     ],
+     "expected": "Sawasdee, Ana!"
+    },
+    {
+     "call": "greet",
+     "args": [
+      "Bo",
+      "Hi"
+     ],
+     "expected": "Hi, Bo!"
+    },
+    {
+     "call": "greet",
+     "args": [
+      ""
+     ],
+     "expected": "Hello, !"
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 4,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w04-apply-twice",
+   "title": "Apply a function twice",
+   "statement": "Write <code>apply_twice(f, x)</code> that calls the function <code>f</code> on <code>x</code>, then calls it again on the result.",
+   "example": "apply_twice(lambda v: v + 3, 10)  ->  16",
+   "entry_name": "apply_twice",
+   "starter_code": "def apply_twice(f, x):\n    # functions can be passed around like any other value\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "apply_twice(lambda v: v + 3, 10)",
+     "expected": 16
+    },
+    {
+     "expr": "apply_twice(lambda v: v * 2, 5)",
+     "expected": 20
+    },
+    {
+     "expr": "apply_twice(str.upper, 'ab')",
+     "expected": "AB"
+    },
+    {
+     "expr": "apply_twice(lambda v: v, 7)",
+     "expected": 7
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 4,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w04-describe",
+   "title": "Describe a list",
+   "statement": "Write <code>describe(nums)</code> that returns a dictionary with the keys <code>n</code>, <code>total</code>, <code>mean</code>, <code>min</code> and <code>max</code>. For an empty list return <code>{'n': 0, 'total': 0, 'mean': 0, 'min': None, 'max': None}</code>.",
+   "example": "describe([1, 2, 3])  ->  {'n': 3, 'total': 6, 'mean': 2.0, 'min': 1, 'max': 3}",
+   "entry_name": "describe",
+   "starter_code": "def describe(nums):\n    # build the dictionary and return it\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "describe",
+     "args": [
+      [
+       1,
+       2,
+       3
+      ]
+     ],
+     "expected": {
+      "n": 3,
+      "total": 6,
+      "mean": 2.0,
+      "min": 1,
+      "max": 3
+     }
+    },
+    {
+     "call": "describe",
+     "args": [
+      []
+     ],
+     "expected": {
+      "n": 0,
+      "total": 0,
+      "mean": 0,
+      "min": null,
+      "max": null
+     }
+    },
+    {
+     "call": "describe",
+     "args": [
+      [
+       5
+      ]
+     ],
+     "expected": {
+      "n": 1,
+      "total": 5,
+      "mean": 5.0,
+      "min": 5,
+      "max": 5
+     }
+    },
+    {
+     "call": "describe",
+     "args": [
+      [
+       -1,
+       1
+      ]
+     ],
+     "expected": {
+      "n": 2,
+      "total": 0,
+      "mean": 0.0,
+      "min": -1,
+      "max": 1
+     }
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 4,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w04-total-varargs",
+   "title": "Any number of arguments",
+   "statement": "Write <code>total(*nums)</code> that adds up however many numbers it is given. <code>total()</code> returns 0.",
+   "example": "total(1, 2, 3)  ->  6",
+   "entry_name": "total",
+   "starter_code": "def total(*nums):\n    # *nums collects the arguments into a tuple\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "total",
+     "args": [
+      1,
+      2,
+      3
+     ],
+     "expected": 6
+    },
+    {
+     "call": "total",
+     "args": [
+      10
+     ],
+     "expected": 10
+    },
+    {
+     "call": "total",
+     "args": [],
+     "expected": 0
+    },
+    {
+     "call": "total",
+     "args": [
+      1.5,
+      2.5,
+      3.0
+     ],
+     "expected": 7.0
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 4,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w04-make-multiplier",
+   "title": "A function that builds a function",
+   "statement": "Write <code>make_multiplier(k)</code> that returns a <em>new function</em>. Calling that new function with <code>x</code> returns <code>k * x</code>.",
+   "example": "make_multiplier(3)(5)  ->  15",
+   "entry_name": "make_multiplier",
+   "starter_code": "def make_multiplier(k):\n    # define an inner function and return it (do not call it)\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "make_multiplier(3)(5)",
+     "expected": 15
+    },
+    {
+     "expr": "make_multiplier(0)(9)",
+     "expected": 0
+    },
+    {
+     "expr": "make_multiplier(-2)(4)",
+     "expected": -8
+    },
+    {
+     "expr": "[make_multiplier(2)(v) for v in [1, 2, 3]]",
+     "expected": [
+      2,
+      4,
+      6
+     ]
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 5,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w05-is-divisible",
+   "title": "Is it divisible?",
+   "statement": "Write <code>is_divisible(n, d)</code> that returns <code>True</code> when n divides exactly by d. If d is 0, return <code>False</code>.",
+   "example": "is_divisible(10, 5)  ->  True",
+   "entry_name": "is_divisible",
+   "starter_code": "def is_divisible(n, d):\n    # the remainder operator is %\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "is_divisible",
+     "args": [
+      10,
+      5
+     ],
+     "expected": true
+    },
+    {
+     "call": "is_divisible",
+     "args": [
+      10,
+      3
+     ],
+     "expected": false
+    },
+    {
+     "call": "is_divisible",
+     "args": [
+      7,
+      0
+     ],
+     "expected": false
+    },
+    {
+     "call": "is_divisible",
+     "args": [
+      0,
+      4
+     ],
+     "expected": true
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 5,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w05-hypotenuse",
+   "title": "Hypotenuse",
+   "statement": "Write <code>hypotenuse(a, b)</code> that returns the length of the long side of a right-angled triangle, rounded to 3 decimal places.",
+   "example": "hypotenuse(3, 4)  ->  5.0",
+   "entry_name": "hypotenuse",
+   "starter_code": "def hypotenuse(a, b):\n    # the square root of a**2 + b**2; ** 0.5 works\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "hypotenuse",
+     "args": [
+      3,
+      4
+     ],
+     "expected": 5.0
+    },
+    {
+     "call": "hypotenuse",
+     "args": [
+      5,
+      12
+     ],
+     "expected": 13.0
+    },
+    {
+     "call": "hypotenuse",
+     "args": [
+      1,
+      1
+     ],
+     "expected": 1.414
+    },
+    {
+     "call": "hypotenuse",
+     "args": [
+      0,
+      8
+     ],
+     "expected": 8.0
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 5,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w05-split-coins",
+   "title": "Bags and leftovers",
+   "statement": "Write <code>split_coins(total, per_bag)</code> that returns <code>[full_bags, leftover_coins]</code> using integer division and remainder.",
+   "example": "split_coins(17, 5)  ->  [3, 2]",
+   "entry_name": "split_coins",
+   "starter_code": "def split_coins(total, per_bag):\n    # // is integer division, % is the remainder\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "split_coins",
+     "args": [
+      17,
+      5
+     ],
+     "expected": [
+      3,
+      2
+     ]
+    },
+    {
+     "call": "split_coins",
+     "args": [
+      20,
+      4
+     ],
+     "expected": [
+      5,
+      0
+     ]
+    },
+    {
+     "call": "split_coins",
+     "args": [
+      3,
+      10
+     ],
+     "expected": [
+      0,
+      3
+     ]
+    },
+    {
+     "call": "split_coins",
+     "args": [
+      0,
+      7
+     ],
+     "expected": [
+      0,
+      0
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 5,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w05-in-range",
+   "title": "Between two values",
+   "statement": "Write <code>in_range(x, low, high)</code> that returns <code>True</code> when x is between low and high, including the ends.",
+   "example": "in_range(5, 1, 10)  ->  True",
+   "entry_name": "in_range",
+   "starter_code": "def in_range(x, low, high):\n    # Python allows low <= x <= high\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "in_range",
+     "args": [
+      5,
+      1,
+      10
+     ],
+     "expected": true
+    },
+    {
+     "call": "in_range",
+     "args": [
+      1,
+      1,
+      10
+     ],
+     "expected": true
+    },
+    {
+     "call": "in_range",
+     "args": [
+      11,
+      1,
+      10
+     ],
+     "expected": false
+    },
+    {
+     "call": "in_range",
+     "args": [
+      -3,
+      -5,
+      0
+     ],
+     "expected": true
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 5,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w05-is-leap",
+   "title": "Leap year",
+   "statement": "Write <code>is_leap(year)</code>. A leap year divides by 4, except years that divide by 100, unless they also divide by 400.",
+   "example": "is_leap(2024)  ->  True",
+   "entry_name": "is_leap",
+   "starter_code": "def is_leap(year):\n    # combine the tests with and / or\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "is_leap",
+     "args": [
+      2024
+     ],
+     "expected": true
+    },
+    {
+     "call": "is_leap",
+     "args": [
+      1900
+     ],
+     "expected": false
+    },
+    {
+     "call": "is_leap",
+     "args": [
+      2000
+     ],
+     "expected": true
+    },
+    {
+     "call": "is_leap",
+     "args": [
+      2023
+     ],
+     "expected": false
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 5,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w05-quadratic-roots",
+   "title": "Quadratic roots",
+   "statement": "Write <code>quadratic_roots(a, b, c)</code> that returns the real roots of <code>ax&sup2; + bx + c = 0</code> as a sorted list, each rounded to 4 decimals. Return an empty list when there are no real roots.",
+   "example": "quadratic_roots(1, -3, 2)  ->  [1.0, 2.0]",
+   "entry_name": "quadratic_roots",
+   "starter_code": "def quadratic_roots(a, b, c):\n    # the discriminant is b**2 - 4*a*c\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "quadratic_roots",
+     "args": [
+      1,
+      -3,
+      2
+     ],
+     "expected": [
+      1.0,
+      2.0
+     ]
+    },
+    {
+     "call": "quadratic_roots",
+     "args": [
+      1,
+      2,
+      1
+     ],
+     "expected": [
+      -1.0
+     ]
+    },
+    {
+     "call": "quadratic_roots",
+     "args": [
+      1,
+      0,
+      1
+     ],
+     "expected": []
+    },
+    {
+     "call": "quadratic_roots",
+     "args": [
+      2,
+      -4,
+      -6
+     ],
+     "expected": [
+      -1.0,
+      3.0
+     ]
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 6,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w06-letter-grade",
+   "title": "SCIM 105 letter grade",
+   "statement": "Write <code>letter_grade(score)</code> using the course grading table: 0-49 F, 50-55 D, 56-60 D+, 61-65 C, 66-70 C+, 71-75 B, 76-80 B+, 81-100 A.",
+   "example": "letter_grade(85)  ->  'A'",
+   "entry_name": "letter_grade",
+   "starter_code": "def letter_grade(score):\n    # chain if / elif from the highest band downwards\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "letter_grade",
+     "args": [
+      85
+     ],
+     "expected": "A"
+    },
+    {
+     "call": "letter_grade",
+     "args": [
+      70
+     ],
+     "expected": "C+"
+    },
+    {
+     "call": "letter_grade",
+     "args": [
+      50
+     ],
+     "expected": "D"
+    },
+    {
+     "call": "letter_grade",
+     "args": [
+      49
+     ],
+     "expected": "F"
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 6,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w06-absolute",
+   "title": "Absolute value by hand",
+   "statement": "Write <code>absolute(x)</code> that returns the size of x ignoring its sign - without using the built-in <code>abs()</code>.",
+   "example": "absolute(-5)  ->  5",
+   "entry_name": "absolute",
+   "starter_code": "def absolute(x):\n    # if the number is negative, return minus the number\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "absolute",
+     "args": [
+      -5
+     ],
+     "expected": 5
+    },
+    {
+     "call": "absolute",
+     "args": [
+      5
+     ],
+     "expected": 5
+    },
+    {
+     "call": "absolute",
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "call": "absolute",
+     "args": [
+      -2.5
+     ],
+     "expected": 2.5
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 6,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w06-sign",
+   "title": "Sign of a number",
+   "statement": "Write <code>sign(x)</code> that returns <code>-1</code> for negative numbers, <code>0</code> for zero and <code>1</code> for positive numbers.",
+   "example": "sign(-7)  ->  -1",
+   "entry_name": "sign",
+   "starter_code": "def sign(x):\n    # three branches: <, == and else\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "sign",
+     "args": [
+      -7
+     ],
+     "expected": -1
+    },
+    {
+     "call": "sign",
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "call": "sign",
+     "args": [
+      3
+     ],
+     "expected": 1
+    },
+    {
+     "call": "sign",
+     "args": [
+      -0.1
+     ],
+     "expected": -1
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 6,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w06-bmi-category",
+   "title": "BMI category",
+   "statement": "Write <code>bmi_category(weight_kg, height_m)</code>. BMI is weight / height&sup2;. Return <code>'underweight'</code> below 18.5, <code>'normal'</code> below 25, <code>'overweight'</code> below 30, otherwise <code>'obese'</code>.",
+   "example": "bmi_category(50, 1.75)  ->  'underweight'",
+   "entry_name": "bmi_category",
+   "starter_code": "def bmi_category(weight_kg, height_m):\n    # work out the BMI first, then decide\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "bmi_category",
+     "args": [
+      50,
+      1.75
+     ],
+     "expected": "underweight"
+    },
+    {
+     "call": "bmi_category",
+     "args": [
+      68,
+      1.75
+     ],
+     "expected": "normal"
+    },
+    {
+     "call": "bmi_category",
+     "args": [
+      85,
+      1.75
+     ],
+     "expected": "overweight"
+    },
+    {
+     "call": "bmi_category",
+     "args": [
+      100,
+      1.75
+     ],
+     "expected": "obese"
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 6,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w06-largest-of-three",
+   "title": "Largest of three",
+   "statement": "Write <code>largest_of_three(a, b, c)</code> that returns the biggest of the three values using if statements (not the built-in <code>max</code>).",
+   "example": "largest_of_three(1, 9, 5)  ->  9",
+   "entry_name": "largest_of_three",
+   "starter_code": "def largest_of_three(a, b, c):\n    # compare a with b first, then compare the winner with c\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "largest_of_three",
+     "args": [
+      1,
+      9,
+      5
+     ],
+     "expected": 9
+    },
+    {
+     "call": "largest_of_three",
+     "args": [
+      9,
+      1,
+      5
+     ],
+     "expected": 9
+    },
+    {
+     "call": "largest_of_three",
+     "args": [
+      1,
+      5,
+      9
+     ],
+     "expected": 9
+    },
+    {
+     "call": "largest_of_three",
+     "args": [
+      4,
+      4,
+      4
+     ],
+     "expected": 4
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 6,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w06-triangle-type",
+   "title": "What kind of triangle?",
+   "statement": "Write <code>triangle_type(a, b, c)</code> returning <code>'not a triangle'</code>, <code>'equilateral'</code>, <code>'isosceles'</code> or <code>'scalene'</code>. Three lengths only form a triangle when each pair adds to more than the third.",
+   "example": "triangle_type(3, 3, 3)  ->  'equilateral'",
+   "entry_name": "triangle_type",
+   "starter_code": "def triangle_type(a, b, c):\n    # check the triangle inequality first\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "triangle_type",
+     "args": [
+      3,
+      3,
+      3
+     ],
+     "expected": "equilateral"
+    },
+    {
+     "call": "triangle_type",
+     "args": [
+      3,
+      3,
+      5
+     ],
+     "expected": "isosceles"
+    },
+    {
+     "call": "triangle_type",
+     "args": [
+      3,
+      4,
+      5
+     ],
+     "expected": "scalene"
+    },
+    {
+     "call": "triangle_type",
+     "args": [
+      1,
+      2,
+      10
+     ],
+     "expected": "not a triangle"
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 7,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w07-count-evens",
+   "title": "Count the even numbers",
+   "statement": "Write <code>count_evens(nums)</code> that returns how many numbers in the list are even.",
+   "example": "count_evens([1, 2, 3, 4])  ->  2",
+   "entry_name": "count_evens",
+   "starter_code": "def count_evens(nums):\n    # loop, test with %, and add to a counter\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "count_evens",
+     "args": [
+      [
+       1,
+       2,
+       3,
+       4
+      ]
+     ],
+     "expected": 2
+    },
+    {
+     "call": "count_evens",
+     "args": [
+      []
+     ],
+     "expected": 0
+    },
+    {
+     "call": "count_evens",
+     "args": [
+      [
+       2,
+       4,
+       6
+      ]
+     ],
+     "expected": 3
+    },
+    {
+     "call": "count_evens",
+     "args": [
+      [
+       1,
+       3,
+       5
+      ]
+     ],
+     "expected": 0
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 7,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w07-sum-positive",
+   "title": "Add only the positives",
+   "statement": "Write <code>sum_positive(nums)</code> that adds up only the numbers greater than 0.",
+   "example": "sum_positive([1, -2, 3])  ->  4",
+   "entry_name": "sum_positive",
+   "starter_code": "def sum_positive(nums):\n    # skip anything that is not positive\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "sum_positive",
+     "args": [
+      [
+       1,
+       -2,
+       3
+      ]
+     ],
+     "expected": 4
+    },
+    {
+     "call": "sum_positive",
+     "args": [
+      [
+       -1,
+       -2
+      ]
+     ],
+     "expected": 0
+    },
+    {
+     "call": "sum_positive",
+     "args": [
+      []
+     ],
+     "expected": 0
+    },
+    {
+     "call": "sum_positive",
+     "args": [
+      [
+       0,
+       5
+      ]
+     ],
+     "expected": 5
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 7,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w07-first-negative",
+   "title": "First negative number",
+   "statement": "Write <code>first_negative(nums)</code> that returns the first negative value in the list, or <code>None</code> if there is none. Stop as soon as you find it.",
+   "example": "first_negative([3, -1, -7])  ->  -1",
+   "entry_name": "first_negative",
+   "starter_code": "def first_negative(nums):\n    # return straight away inside the loop\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "first_negative",
+     "args": [
+      [
+       3,
+       -1,
+       -7
+      ]
+     ],
+     "expected": -1
+    },
+    {
+     "call": "first_negative",
+     "args": [
+      [
+       1,
+       2
+      ]
+     ],
+     "expected": null
+    },
+    {
+     "call": "first_negative",
+     "args": [
+      []
+     ],
+     "expected": null
+    },
+    {
+     "call": "first_negative",
+     "args": [
+      [
+       -5
+      ]
+     ],
+     "expected": -5
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 7,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w07-passing-students",
+   "title": "Who passed?",
+   "statement": "Write <code>passing_students(scores)</code>. <code>scores</code> is a dictionary of name &rarr; score. Return an alphabetically sorted list of the names that scored 50 or more.",
+   "example": "passing_students({'Ana': 80, 'Bo': 40, 'Cha': 50})  ->  ['Ana', 'Cha']",
+   "entry_name": "passing_students",
+   "starter_code": "def passing_students(scores):\n    # loop over scores.items(), collect names, then sort\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "passing_students",
+     "args": [
+      {
+       "Ana": 80,
+       "Bo": 40,
+       "Cha": 50
+      }
+     ],
+     "expected": [
+      "Ana",
+      "Cha"
+     ]
+    },
+    {
+     "call": "passing_students",
+     "args": [
+      {
+       "Dao": 10
+      }
+     ],
+     "expected": []
+    },
+    {
+     "call": "passing_students",
+     "args": [
+      {}
+     ],
+     "expected": []
+    },
+    {
+     "call": "passing_students",
+     "args": [
+      {
+       "Eak": 55,
+       "Ann": 90
+      }
+     ],
+     "expected": [
+      "Ann",
+      "Eak"
+     ]
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 7,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w07-grade-tally",
+   "title": "Tally the grades",
+   "statement": "Write <code>grade_tally(scores)</code> that returns a dictionary counting how many scores fall in each band: <code>'A'</code> 80+, <code>'B'</code> 70-79, <code>'C'</code> 60-69, <code>'D'</code> 50-59, <code>'F'</code> below 50. Include only bands that occur.",
+   "example": "grade_tally([95, 82, 71, 45])  ->  {'A': 2, 'B': 1, 'F': 1}",
+   "entry_name": "grade_tally",
+   "starter_code": "def grade_tally(scores):\n    # work out the letter, then count it in a dictionary\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "grade_tally",
+     "args": [
+      [
+       95,
+       82,
+       71,
+       45
+      ]
+     ],
+     "expected": {
+      "A": 2,
+      "B": 1,
+      "F": 1
+     }
+    },
+    {
+     "call": "grade_tally",
+     "args": [
+      []
+     ],
+     "expected": {}
+    },
+    {
+     "call": "grade_tally",
+     "args": [
+      [
+       50,
+       59,
+       60
+      ]
+     ],
+     "expected": {
+      "D": 2,
+      "C": 1
+     }
+    },
+    {
+     "call": "grade_tally",
+     "args": [
+      [
+       10,
+       20,
+       30
+      ]
+     ],
+     "expected": {
+      "F": 3
+     }
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 7,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w07-longest-streak",
+   "title": "Longest streak",
+   "statement": "Write <code>longest_streak(values)</code> that returns the length of the longest run of equal values sitting next to each other. Return 0 for an empty list.",
+   "example": "longest_streak([1, 1, 2, 2, 2, 3])  ->  3",
+   "entry_name": "longest_streak",
+   "starter_code": "def longest_streak(values):\n    # keep a current streak and a best streak\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "longest_streak",
+     "args": [
+      [
+       1,
+       1,
+       2,
+       2,
+       2,
+       3
+      ]
+     ],
+     "expected": 3
+    },
+    {
+     "call": "longest_streak",
+     "args": [
+      []
+     ],
+     "expected": 0
+    },
+    {
+     "call": "longest_streak",
+     "args": [
+      [
+       4
+      ]
+     ],
+     "expected": 1
+    },
+    {
+     "call": "longest_streak",
+     "args": [
+      [
+       "a",
+       "b",
+       "b"
+      ]
+     ],
+     "expected": 2
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 8,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w08-mean",
+   "title": "Mean of a list",
+   "statement": "Write <code>mean(nums)</code> that returns the average, rounded to 2 decimals. Return <code>0</code> for an empty list.",
+   "example": "mean([1, 2, 3])  ->  2.0",
+   "entry_name": "mean",
+   "starter_code": "def mean(nums):\n    # round(sum(nums) / len(nums), 2)\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "mean",
+     "args": [
+      [
+       1,
+       2,
+       3
+      ]
+     ],
+     "expected": 2.0
+    },
+    {
+     "call": "mean",
+     "args": [
+      [
+       10,
+       15
+      ]
+     ],
+     "expected": 12.5
+    },
+    {
+     "call": "mean",
+     "args": [
+      []
+     ],
+     "expected": 0
+    },
+    {
+     "call": "mean",
+     "args": [
+      [
+       2.5,
+       2.5,
+       2.5
+      ]
+     ],
+     "expected": 2.5
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 8,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w08-celsius-table",
+   "title": "Convert a whole table",
+   "statement": "Write <code>celsius_table(f_values)</code> that converts a list of Fahrenheit values to Celsius, each rounded to 1 decimal, and returns the list.",
+   "example": "celsius_table([32, 212])  ->  [0.0, 100.0]",
+   "entry_name": "celsius_table",
+   "starter_code": "def celsius_table(f_values):\n    # build a new list inside a loop\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "celsius_table",
+     "args": [
+      [
+       32,
+       212
+      ]
+     ],
+     "expected": [
+      0.0,
+      100.0
+     ]
+    },
+    {
+     "call": "celsius_table",
+     "args": [
+      [
+       98.6
+      ]
+     ],
+     "expected": [
+      37.0
+     ]
+    },
+    {
+     "call": "celsius_table",
+     "args": [
+      []
+     ],
+     "expected": []
+    },
+    {
+     "call": "celsius_table",
+     "args": [
+      [
+       0,
+       -40
+      ]
+     ],
+     "expected": [
+      -17.8,
+      -40.0
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 8,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w08-initials",
+   "title": "Initials",
+   "statement": "Write <code>initials(full_name)</code> that turns <code>'Kittisak Chayantrakom'</code> into <code>'K.C.'</code> - one capital letter and a dot for each word.",
+   "example": "initials('Kittisak Chayantrakom')  ->  'K.C.'",
+   "entry_name": "initials",
+   "starter_code": "def initials(full_name):\n    # split the name, take word[0], make it upper case\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "initials",
+     "args": [
+      "Kittisak Chayantrakom"
+     ],
+     "expected": "K.C."
+    },
+    {
+     "call": "initials",
+     "args": [
+      "ana maria lopez"
+     ],
+     "expected": "A.M.L."
+    },
+    {
+     "call": "initials",
+     "args": [
+      "Bo"
+     ],
+     "expected": "B."
+    },
+    {
+     "call": "initials",
+     "args": [
+      ""
+     ],
+     "expected": ""
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 8,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w08-word-lengths",
+   "title": "How long is each word?",
+   "statement": "Write <code>word_lengths(sentence)</code> that returns a dictionary mapping each word to its number of letters.",
+   "example": "word_lengths('data science')  ->  {'data': 4, 'science': 7}",
+   "entry_name": "word_lengths",
+   "starter_code": "def word_lengths(sentence):\n    # split the sentence, then use len(word)\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "word_lengths",
+     "args": [
+      "data science"
+     ],
+     "expected": {
+      "data": 4,
+      "science": 7
+     }
+    },
+    {
+     "call": "word_lengths",
+     "args": [
+      "a bb ccc"
+     ],
+     "expected": {
+      "a": 1,
+      "bb": 2,
+      "ccc": 3
+     }
+    },
+    {
+     "call": "word_lengths",
+     "args": [
+      ""
+     ],
+     "expected": {}
+    },
+    {
+     "call": "word_lengths",
+     "args": [
+      "python"
+     ],
+     "expected": {
+      "python": 6
+     }
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 8,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w08-running-total",
+   "title": "Running total",
+   "statement": "Write <code>running_total(nums)</code> that returns the cumulative totals. For <code>[1, 2, 3]</code> the answer is <code>[1, 3, 6]</code>.",
+   "example": "running_total([1, 2, 3])  ->  [1, 3, 6]",
+   "entry_name": "running_total",
+   "starter_code": "def running_total(nums):\n    # keep a total and append it each time round the loop\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "running_total",
+     "args": [
+      [
+       1,
+       2,
+       3
+      ]
+     ],
+     "expected": [
+      1,
+      3,
+      6
+     ]
+    },
+    {
+     "call": "running_total",
+     "args": [
+      []
+     ],
+     "expected": []
+    },
+    {
+     "call": "running_total",
+     "args": [
+      [
+       5
+      ]
+     ],
+     "expected": [
+      5
+     ]
+    },
+    {
+     "call": "running_total",
+     "args": [
+      [
+       2,
+       -2,
+       4
+      ]
+     ],
+     "expected": [
+      2,
+      0,
+      4
+     ]
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 8,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w08-std-dev",
+   "title": "Standard deviation",
+   "statement": "Write <code>std_dev(nums)</code> that returns the population standard deviation, rounded to 4 decimals: the square root of the average squared distance from the mean. Return <code>0</code> for an empty list.",
+   "example": "std_dev([2, 4, 4, 4, 5, 5, 7, 9])  ->  2.0",
+   "entry_name": "std_dev",
+   "starter_code": "def std_dev(nums):\n    # mean first, then the average of (n - mean) ** 2, then ** 0.5\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "std_dev",
+     "args": [
+      [
+       2,
+       4,
+       4,
+       4,
+       5,
+       5,
+       7,
+       9
+      ]
+     ],
+     "expected": 2.0
+    },
+    {
+     "call": "std_dev",
+     "args": [
+      [
+       1,
+       1,
+       1
+      ]
+     ],
+     "expected": 0.0
+    },
+    {
+     "call": "std_dev",
+     "args": [
+      []
+     ],
+     "expected": 0
+    },
+    {
+     "call": "std_dev",
+     "args": [
+      [
+       10,
+       20
+      ]
+     ],
+     "expected": 5.0
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 9,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w09-countdown",
+   "title": "Countdown",
+   "statement": "Write <code>countdown(n)</code> that returns the list <code>[n, n-1, ..., 1]</code>. Return an empty list when n is 0 or less.",
+   "example": "countdown(5)  ->  [5, 4, 3, 2, 1]",
+   "entry_name": "countdown",
+   "starter_code": "def countdown(n):\n    # range(n, 0, -1) counts downwards\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "countdown",
+     "args": [
+      5
+     ],
+     "expected": [
+      5,
+      4,
+      3,
+      2,
+      1
+     ]
+    },
+    {
+     "call": "countdown",
+     "args": [
+      1
+     ],
+     "expected": [
+      1
+     ]
+    },
+    {
+     "call": "countdown",
+     "args": [
+      0
+     ],
+     "expected": []
+    },
+    {
+     "call": "countdown",
+     "args": [
+      3
+     ],
+     "expected": [
+      3,
+      2,
+      1
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 9,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w09-factorial",
+   "title": "Factorial",
+   "statement": "Write <code>factorial(n)</code> that returns n! = 1 &times; 2 &times; ... &times; n. <code>factorial(0)</code> is 1.",
+   "example": "factorial(5)  ->  120",
+   "entry_name": "factorial",
+   "starter_code": "def factorial(n):\n    # start the product at 1 and multiply in a loop\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "factorial",
+     "args": [
+      5
+     ],
+     "expected": 120
+    },
+    {
+     "call": "factorial",
+     "args": [
+      0
+     ],
+     "expected": 1
+    },
+    {
+     "call": "factorial",
+     "args": [
+      1
+     ],
+     "expected": 1
+    },
+    {
+     "call": "factorial",
+     "args": [
+      7
+     ],
+     "expected": 5040
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 9,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w09-skip-multiples",
+   "title": "Skip the multiples",
+   "statement": "Write <code>skip_multiples(nums, k)</code> that returns the list without any value that is a multiple of k. Practise using <code>continue</code>.",
+   "example": "skip_multiples([1, 2, 3, 4, 5, 6], 3)  ->  [1, 2, 4, 5]",
+   "entry_name": "skip_multiples",
+   "starter_code": "def skip_multiples(nums, k):\n    # if n % k == 0: continue\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "skip_multiples",
+     "args": [
+      [
+       1,
+       2,
+       3,
+       4,
+       5,
+       6
+      ],
+      3
+     ],
+     "expected": [
+      1,
+      2,
+      4,
+      5
+     ]
+    },
+    {
+     "call": "skip_multiples",
+     "args": [
+      [
+       2,
+       4,
+       6
+      ],
+      2
+     ],
+     "expected": []
+    },
+    {
+     "call": "skip_multiples",
+     "args": [
+      [],
+      5
+     ],
+     "expected": []
+    },
+    {
+     "call": "skip_multiples",
+     "args": [
+      [
+       1,
+       2,
+       3
+      ],
+      10
+     ],
+     "expected": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 9,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w09-digit-sum",
+   "title": "Sum of the digits",
+   "statement": "Write <code>digit_sum(n)</code> that adds up the digits of a whole number using a <code>while</code> loop. Treat negative numbers as positive.",
+   "example": "digit_sum(1234)  ->  10",
+   "entry_name": "digit_sum",
+   "starter_code": "def digit_sum(n):\n    # n % 10 gives the last digit, n //= 10 removes it\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "digit_sum",
+     "args": [
+      1234
+     ],
+     "expected": 10
+    },
+    {
+     "call": "digit_sum",
+     "args": [
+      0
+     ],
+     "expected": 0
+    },
+    {
+     "call": "digit_sum",
+     "args": [
+      -45
+     ],
+     "expected": 9
+    },
+    {
+     "call": "digit_sum",
+     "args": [
+      999
+     ],
+     "expected": 27
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 9,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w09-collatz-steps",
+   "title": "Collatz steps",
+   "statement": "Write <code>collatz_steps(n)</code>. Repeat: if n is even halve it, otherwise use 3n + 1. Return how many steps it takes to reach 1.",
+   "example": "collatz_steps(6)  ->  8",
+   "entry_name": "collatz_steps",
+   "starter_code": "def collatz_steps(n):\n    # a while loop that runs until n == 1\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "collatz_steps",
+     "args": [
+      6
+     ],
+     "expected": 8
+    },
+    {
+     "call": "collatz_steps",
+     "args": [
+      1
+     ],
+     "expected": 0
+    },
+    {
+     "call": "collatz_steps",
+     "args": [
+      7
+     ],
+     "expected": 16
+    },
+    {
+     "call": "collatz_steps",
+     "args": [
+      27
+     ],
+     "expected": 111
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 9,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w09-primes-up-to",
+   "title": "Prime numbers",
+   "statement": "Write <code>primes_up_to(n)</code> that returns a list of every prime number from 2 to n.",
+   "example": "primes_up_to(10)  ->  [2, 3, 5, 7]",
+   "entry_name": "primes_up_to",
+   "starter_code": "def primes_up_to(n):\n    # a number is prime if nothing from 2 to its square root divides it\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "primes_up_to",
+     "args": [
+      10
+     ],
+     "expected": [
+      2,
+      3,
+      5,
+      7
+     ]
+    },
+    {
+     "call": "primes_up_to",
+     "args": [
+      2
+     ],
+     "expected": [
+      2
+     ]
+    },
+    {
+     "call": "primes_up_to",
+     "args": [
+      1
+     ],
+     "expected": []
+    },
+    {
+     "call": "primes_up_to",
+     "args": [
+      30
+     ],
+     "expected": [
+      2,
+      3,
+      5,
+      7,
+      11,
+      13,
+      17,
+      19,
+      23,
+      29
+     ]
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 10,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w10-times-table",
+   "title": "Times table",
+   "statement": "Write <code>times_table(n)</code> that returns an n&times;n multiplication table as a list of lists. Row i column j holds (i+1)&times;(j+1).",
+   "example": "times_table(3)  ->  [[1, 2, 3], [2, 4, 6], [3, 6, 9]]",
+   "entry_name": "times_table",
+   "starter_code": "def times_table(n):\n    # a loop inside a loop\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "times_table",
+     "args": [
+      3
+     ],
+     "expected": [
+      [
+       1,
+       2,
+       3
+      ],
+      [
+       2,
+       4,
+       6
+      ],
+      [
+       3,
+       6,
+       9
+      ]
+     ]
+    },
+    {
+     "call": "times_table",
+     "args": [
+      1
+     ],
+     "expected": [
+      [
+       1
+      ]
+     ]
+    },
+    {
+     "call": "times_table",
+     "args": [
+      0
+     ],
+     "expected": []
+    },
+    {
+     "call": "times_table",
+     "args": [
+      2
+     ],
+     "expected": [
+      [
+       1,
+       2
+      ],
+      [
+       2,
+       4
+      ]
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 10,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w10-count-pairs",
+   "title": "Count the pairs",
+   "statement": "Write <code>count_pairs(nums, target)</code> that counts how many pairs of different positions add up to the target.",
+   "example": "count_pairs([1, 2, 3, 4], 5)  ->  2",
+   "entry_name": "count_pairs",
+   "starter_code": "def count_pairs(nums, target):\n    # for i in range(len(nums)) and for j in range(i+1, len(nums))\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "count_pairs",
+     "args": [
+      [
+       1,
+       2,
+       3,
+       4
+      ],
+      5
+     ],
+     "expected": 2
+    },
+    {
+     "call": "count_pairs",
+     "args": [
+      [
+       1,
+       1,
+       1
+      ],
+      2
+     ],
+     "expected": 3
+    },
+    {
+     "call": "count_pairs",
+     "args": [
+      [],
+      3
+     ],
+     "expected": 0
+    },
+    {
+     "call": "count_pairs",
+     "args": [
+      [
+       5
+      ],
+      5
+     ],
+     "expected": 0
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 10,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w10-flatten",
+   "title": "Flatten a table",
+   "statement": "Write <code>flatten(matrix)</code> that turns a list of lists into one flat list, row by row.",
+   "example": "flatten([[1, 2], [3, 4]])  ->  [1, 2, 3, 4]",
+   "entry_name": "flatten",
+   "starter_code": "def flatten(matrix):\n    # loop over the rows, then over the items in each row\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "flatten",
+     "args": [
+      [
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ]
+      ]
+     ],
+     "expected": [
+      1,
+      2,
+      3,
+      4
+     ]
+    },
+    {
+     "call": "flatten",
+     "args": [
+      [
+       [
+        1
+       ]
+      ]
+     ],
+     "expected": [
+      1
+     ]
+    },
+    {
+     "call": "flatten",
+     "args": [
+      []
+     ],
+     "expected": []
+    },
+    {
+     "call": "flatten",
+     "args": [
+      [
+       [
+        1,
+        2,
+        3
+       ],
+       []
+      ]
+     ],
+     "expected": [
+      1,
+      2,
+      3
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 10,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w10-row-sums",
+   "title": "Row totals",
+   "statement": "Write <code>row_sums(matrix)</code> that returns a list holding the total of each row.",
+   "example": "row_sums([[1, 2, 3], [4, 5, 6]])  ->  [6, 15]",
+   "entry_name": "row_sums",
+   "starter_code": "def row_sums(matrix):\n    # one total per row\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "row_sums",
+     "args": [
+      [
+       [
+        1,
+        2,
+        3
+       ],
+       [
+        4,
+        5,
+        6
+       ]
+      ]
+     ],
+     "expected": [
+      6,
+      15
+     ]
+    },
+    {
+     "call": "row_sums",
+     "args": [
+      [
+       [
+        0,
+        0
+       ]
+      ]
+     ],
+     "expected": [
+      0
+     ]
+    },
+    {
+     "call": "row_sums",
+     "args": [
+      []
+     ],
+     "expected": []
+    },
+    {
+     "call": "row_sums",
+     "args": [
+      [
+       [
+        -1,
+        1
+       ],
+       [
+        2,
+        2
+       ]
+      ]
+     ],
+     "expected": [
+      0,
+      4
+     ]
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 10,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w10-transpose",
+   "title": "Transpose a matrix",
+   "statement": "Write <code>transpose(matrix)</code> that swaps rows and columns.",
+   "example": "transpose([[1, 2, 3], [4, 5, 6]])  ->  [[1, 4], [2, 5], [3, 6]]",
+   "entry_name": "transpose",
+   "starter_code": "def transpose(matrix):\n    # the new row i is made of old column i\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "transpose",
+     "args": [
+      [
+       [
+        1,
+        2,
+        3
+       ],
+       [
+        4,
+        5,
+        6
+       ]
+      ]
+     ],
+     "expected": [
+      [
+       1,
+       4
+      ],
+      [
+       2,
+       5
+      ],
+      [
+       3,
+       6
+      ]
+     ]
+    },
+    {
+     "call": "transpose",
+     "args": [
+      [
+       [
+        1
+       ],
+       [
+        2
+       ]
+      ]
+     ],
+     "expected": [
+      [
+       1,
+       2
+      ]
+     ]
+    },
+    {
+     "call": "transpose",
+     "args": [
+      []
+     ],
+     "expected": []
+    },
+    {
+     "call": "transpose",
+     "args": [
+      [
+       [
+        7,
+        8
+       ],
+       [
+        9,
+        10
+       ]
+      ]
+     ],
+     "expected": [
+      [
+       7,
+       9
+      ],
+      [
+       8,
+       10
+      ]
+     ]
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 10,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w10-matmul",
+   "title": "Matrix multiplication",
+   "statement": "Write <code>matmul(a, b)</code> that multiplies two matrices given as lists of lists. You may assume the sizes fit.",
+   "example": "matmul([[1, 2], [3, 4]], [[5, 6], [7, 8]])  ->  [[19, 22], [43, 50]]",
+   "entry_name": "matmul",
+   "starter_code": "def matmul(a, b):\n    # three nested loops: row of a, column of b, and the running total\n    pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "call": "matmul",
+     "args": [
+      [
+       [
+        1,
+        2
+       ],
+       [
+        3,
+        4
+       ]
+      ],
+      [
+       [
+        5,
+        6
+       ],
+       [
+        7,
+        8
+       ]
+      ]
+     ],
+     "expected": [
+      [
+       19,
+       22
+      ],
+      [
+       43,
+       50
+      ]
+     ]
+    },
+    {
+     "call": "matmul",
+     "args": [
+      [
+       [
+        1,
+        0
+       ],
+       [
+        0,
+        1
+       ]
+      ],
+      [
+       [
+        9,
+        8
+       ],
+       [
+        7,
+        6
+       ]
+      ]
+     ],
+     "expected": [
+      [
+       9,
+       8
+      ],
+      [
+       7,
+       6
+      ]
+     ]
+    },
+    {
+     "call": "matmul",
+     "args": [
+      [
+       [
+        2
+       ]
+      ],
+      [
+       [
+        3
+       ]
+      ]
+     ],
+     "expected": [
+      [
+       6
+      ]
+     ]
+    },
+    {
+     "call": "matmul",
+     "args": [
+      [
+       [
+        1,
+        2,
+        3
+       ]
+      ],
+      [
+       [
+        1
+       ],
+       [
+        1
+       ],
+       [
+        1
+       ]
+      ]
+     ],
+     "expected": [
+      [
+       6
+      ]
+     ]
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 11,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w11-student-class",
+   "title": "A Student class",
+   "statement": "Write a class <code>Student</code> whose <code>__init__</code> stores <code>name</code> and <code>score</code> as attributes.",
+   "example": "Student('Ana', 80).name  ->  'Ana'",
+   "entry_name": "Student",
+   "starter_code": "class Student:\n    def __init__(self, name, score):\n        # store name and score on self\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Student('Ana', 80).name",
+     "expected": "Ana"
+    },
+    {
+     "expr": "Student('Ana', 80).score",
+     "expected": 80
+    },
+    {
+     "expr": "Student('Bo', 45).name",
+     "expected": "Bo"
+    },
+    {
+     "expr": "[Student('C', 1).score, Student('D', 2).score]",
+     "expected": [
+      1,
+      2
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 11,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w11-rectangle-class",
+   "title": "A Rectangle with area()",
+   "statement": "Write a class <code>Rectangle</code> that stores <code>width</code> and <code>height</code>, and has a method <code>area()</code> returning width &times; height.",
+   "example": "Rectangle(3, 4).area()  ->  12",
+   "entry_name": "Rectangle",
+   "starter_code": "class Rectangle:\n    def __init__(self, width, height):\n        pass\n\n    def area(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Rectangle(3, 4).area()",
+     "expected": 12
+    },
+    {
+     "expr": "Rectangle(5, 5).area()",
+     "expected": 25
+    },
+    {
+     "expr": "Rectangle(0, 9).area()",
+     "expected": 0
+    },
+    {
+     "expr": "Rectangle(2.5, 4).area()",
+     "expected": 10.0
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 11,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w11-counter-class",
+   "title": "A Counter object",
+   "statement": "Write a class <code>Counter</code> that starts at 0. Method <code>increment()</code> adds 1, and <code>value()</code> returns the current count.",
+   "example": "Counter().value()  ->  0",
+   "entry_name": "Counter",
+   "starter_code": "class Counter:\n    def __init__(self):\n        pass\n\n    def increment(self):\n        pass\n\n    def value(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Counter().value()",
+     "expected": 0
+    },
+    {
+     "expr": "(lambda c: [c.increment(), c.value()][1])(Counter())",
+     "expected": 1
+    },
+    {
+     "expr": "(lambda c: [c.increment(), c.increment(), c.increment(), c.value()][3])(Counter())",
+     "expected": 3
+    },
+    {
+     "expr": "[Counter().value(), Counter().value()]",
+     "expected": [
+      0,
+      0
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 11,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w11-bank-account",
+   "title": "A bank account",
+   "statement": "Write a class <code>BankAccount</code> starting from a given balance (default 0). <code>deposit(amount)</code> adds money, <code>withdraw(amount)</code> takes money out but refuses (changes nothing) if there is not enough, and <code>balance()</code> returns the total.",
+   "example": "BankAccount(100).balance()  ->  100",
+   "entry_name": "BankAccount",
+   "starter_code": "class BankAccount:\n    def __init__(self, start=0):\n        pass\n\n    def deposit(self, amount):\n        pass\n\n    def withdraw(self, amount):\n        pass\n\n    def balance(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "BankAccount(100).balance()",
+     "expected": 100
+    },
+    {
+     "expr": "(lambda a: [a.deposit(50), a.balance()][1])(BankAccount(100))",
+     "expected": 150
+    },
+    {
+     "expr": "(lambda a: [a.withdraw(30), a.balance()][1])(BankAccount(100))",
+     "expected": 70
+    },
+    {
+     "expr": "(lambda a: [a.withdraw(500), a.balance()][1])(BankAccount(100))",
+     "expected": 100
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 11,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w11-point-distance",
+   "title": "Distance between points",
+   "statement": "Write a class <code>Point</code> storing <code>x</code> and <code>y</code>, with a method <code>distance_to(other)</code> returning the straight-line distance, rounded to 3 decimals.",
+   "example": "Point(0, 0).distance_to(Point(3, 4))  ->  5.0",
+   "entry_name": "Point",
+   "starter_code": "class Point:\n    def __init__(self, x, y):\n        pass\n\n    def distance_to(self, other):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Point(0, 0).distance_to(Point(3, 4))",
+     "expected": 5.0
+    },
+    {
+     "expr": "Point(1, 1).distance_to(Point(1, 1))",
+     "expected": 0.0
+    },
+    {
+     "expr": "Point(-1, -1).distance_to(Point(2, 3))",
+     "expected": 5.0
+    },
+    {
+     "expr": "Point(0, 0).distance_to(Point(1, 1))",
+     "expected": 1.414
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 11,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w11-stack",
+   "title": "Build a Stack",
+   "statement": "Write a class <code>Stack</code> (last in, first out) with <code>push(item)</code>, <code>pop()</code> returning and removing the top item (<code>None</code> if empty), <code>peek()</code> returning the top item without removing it, and <code>size()</code>.",
+   "example": "Stack().pop()  ->  None",
+   "entry_name": "Stack",
+   "starter_code": "class Stack:\n    def __init__(self):\n        pass\n\n    def push(self, item):\n        pass\n\n    def pop(self):\n        pass\n\n    def peek(self):\n        pass\n\n    def size(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Stack().pop()",
+     "expected": null
+    },
+    {
+     "expr": "(lambda s: [s.push(1), s.push(2), s.pop()][2])(Stack())",
+     "expected": 2
+    },
+    {
+     "expr": "(lambda s: [s.push('a'), s.push('b'), s.peek(), s.size()][3])(Stack())",
+     "expected": 2
+    },
+    {
+     "expr": "(lambda s: [s.push(1), s.pop(), s.size()][2])(Stack())",
+     "expected": 0
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 12,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w12-temperature-str",
+   "title": "Printing an object",
+   "statement": "Write a class <code>Temperature</code> storing <code>celsius</code>, whose <code>__str__</code> returns text like <code>25.0 C</code> (one decimal place).",
+   "example": "str(Temperature(25))  ->  '25.0 C'",
+   "entry_name": "Temperature",
+   "starter_code": "class Temperature:\n    def __init__(self, celsius):\n        pass\n\n    def __str__(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "str(Temperature(25))",
+     "expected": "25.0 C"
+    },
+    {
+     "expr": "str(Temperature(-3.25))",
+     "expected": "-3.2 C"
+    },
+    {
+     "expr": "str(Temperature(0))",
+     "expected": "0.0 C"
+    },
+    {
+     "expr": "f'Today: {Temperature(31.5)}'",
+     "expected": "Today: 31.5 C"
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 12,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w12-robot-count",
+   "title": "Counting the objects",
+   "statement": "Write a class <code>Robot</code> with a class attribute <code>count</code> that goes up by 1 every time a new Robot is created. Each robot also stores its <code>name</code>.",
+   "example": "(lambda: [Robot('a'), Robot.count][1])()  ->  1",
+   "entry_name": "Robot",
+   "starter_code": "class Robot:\n    count = 0\n\n    def __init__(self, name):\n        # store the name and increase Robot.count\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "(lambda: [Robot('a'), Robot.count][1])()",
+     "expected": 1
+    },
+    {
+     "expr": "(lambda: [Robot('b'), Robot('c'), Robot.count][2])()",
+     "expected": 3
+    },
+    {
+     "expr": "Robot('d').name",
+     "expected": "d"
+    },
+    {
+     "expr": "(lambda: [Robot('e'), Robot.count][1])()",
+     "expected": 5
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 12,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w12-animal-dog",
+   "title": "Inheritance",
+   "statement": "Write a class <code>Animal</code> with a method <code>speak()</code> returning <code>'...'</code>, and a class <code>Dog</code> that inherits from Animal and overrides <code>speak()</code> to return <code>'Woof'</code>.",
+   "example": "Animal().speak()  ->  '...'",
+   "entry_name": "Dog",
+   "starter_code": "class Animal:\n    def speak(self):\n        pass\n\n\nclass Dog(Animal):\n    def speak(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Animal().speak()",
+     "expected": "..."
+    },
+    {
+     "expr": "Dog().speak()",
+     "expected": "Woof"
+    },
+    {
+     "expr": "isinstance(Dog(), Animal)",
+     "expected": true
+    },
+    {
+     "expr": "[a.speak() for a in [Animal(), Dog()]]",
+     "expected": [
+      "...",
+      "Woof"
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 12,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w12-shape-area",
+   "title": "Shapes that know their area",
+   "statement": "Write a base class <code>Shape</code> with <code>area()</code> returning 0, and two subclasses: <code>Square(side)</code> and <code>Circle(radius)</code>. Each overrides <code>area()</code>. Round the circle's area to 4 decimals and use 3.14159 for pi.",
+   "example": "Shape().area()  ->  0",
+   "entry_name": "Shape",
+   "starter_code": "class Shape:\n    def area(self):\n        return 0\n\n\nclass Square(Shape):\n    def __init__(self, side):\n        pass\n\n    def area(self):\n        pass\n\n\nclass Circle(Shape):\n    def __init__(self, radius):\n        pass\n\n    def area(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Shape().area()",
+     "expected": 0
+    },
+    {
+     "expr": "Square(4).area()",
+     "expected": 16
+    },
+    {
+     "expr": "Circle(2).area()",
+     "expected": 12.5664
+    },
+    {
+     "expr": "sum(s.area() for s in [Square(2), Shape()])",
+     "expected": 4
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 12,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w12-money-eq",
+   "title": "Comparing and adding objects",
+   "statement": "Write a class <code>Money</code> storing <code>baht</code>, with <code>__eq__</code> so two Money objects with the same amount are equal, and <code>__add__</code> so <code>Money(10) + Money(5)</code> gives <code>Money(15)</code>.",
+   "example": "Money(10) == Money(10)  ->  True",
+   "entry_name": "Money",
+   "starter_code": "class Money:\n    def __init__(self, baht):\n        self.baht = baht\n\n    def __eq__(self, other):\n        pass\n\n    def __add__(self, other):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "Money(10) == Money(10)",
+     "expected": true
+    },
+    {
+     "expr": "Money(10) == Money(11)",
+     "expected": false
+    },
+    {
+     "expr": "(Money(10) + Money(5)).baht",
+     "expected": 15
+    },
+    {
+     "expr": "(Money(1) + Money(2)) == Money(3)",
+     "expected": true
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 12,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w12-gradebook",
+   "title": "A GradeBook class",
+   "statement": "Write a class <code>GradeBook</code>. <code>add(name, score)</code> records a score, <code>average()</code> returns the mean of all scores rounded to 2 decimals (0 when empty), and <code>top_student()</code> returns the name with the highest score (<code>None</code> when empty).",
+   "example": "GradeBook().average()  ->  0",
+   "entry_name": "GradeBook",
+   "starter_code": "class GradeBook:\n    def __init__(self):\n        pass\n\n    def add(self, name, score):\n        pass\n\n    def average(self):\n        pass\n\n    def top_student(self):\n        pass\n",
+   "setup_code": null,
+   "tests": [
+    {
+     "expr": "GradeBook().average()",
+     "expected": 0
+    },
+    {
+     "expr": "GradeBook().top_student()",
+     "expected": null
+    },
+    {
+     "expr": "(lambda g: [g.add('Ana', 80), g.add('Bo', 60), g.average()][2])(GradeBook())",
+     "expected": 70.0
+    },
+    {
+     "expr": "(lambda g: [g.add('Ana', 80), g.add('Bo', 95), g.top_student()][2])(GradeBook())",
+     "expected": "Bo"
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 13,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w13-count-lines",
+   "title": "Count the lines in a file",
+   "statement": "Write <code>count_lines(path)</code> that opens the text file and returns how many lines it has. A file <code>notes.txt</code> with 3 lines is ready for you.",
+   "example": "count_lines('notes.txt')  ->  3",
+   "entry_name": "count_lines",
+   "starter_code": "def count_lines(path):\n    # with open(path) as f: then loop, or use f.readlines()\n    pass\n",
+   "setup_code": "with open('notes.txt', 'w') as _f:\n    _f.write('data science is fun\\n')\n    _f.write('python is a tool\\n')\n    _f.write('practice makes progress\\n')\nwith open('numbers.txt', 'w') as _f:\n    _f.write('10\\n20\\n30\\n40\\n')\n",
+   "tests": [
+    {
+     "call": "count_lines",
+     "args": [
+      "notes.txt"
+     ],
+     "expected": 3
+    },
+    {
+     "call": "count_lines",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": 4
+    },
+    {
+     "call": "count_lines",
+     "args": [
+      "notes.txt"
+     ],
+     "expected": 3
+    },
+    {
+     "call": "count_lines",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": 4
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 13,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w13-sum-file-numbers",
+   "title": "Add the numbers in a file",
+   "statement": "Write <code>sum_file_numbers(path)</code> that reads one number per line from <code>numbers.txt</code> and returns their total.",
+   "example": "sum_file_numbers('numbers.txt')  ->  100",
+   "entry_name": "sum_file_numbers",
+   "starter_code": "def sum_file_numbers(path):\n    # int(line) turns the text into a number\n    pass\n",
+   "setup_code": "with open('notes.txt', 'w') as _f:\n    _f.write('data science is fun\\n')\n    _f.write('python is a tool\\n')\n    _f.write('practice makes progress\\n')\nwith open('numbers.txt', 'w') as _f:\n    _f.write('10\\n20\\n30\\n40\\n')\n",
+   "tests": [
+    {
+     "call": "sum_file_numbers",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": 100
+    },
+    {
+     "call": "sum_file_numbers",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": 100
+    },
+    {
+     "call": "sum_file_numbers",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": 100
+    },
+    {
+     "call": "sum_file_numbers",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": 100
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 13,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w13-write-lines",
+   "title": "Write a file",
+   "statement": "Write <code>write_lines(path, lines)</code> that writes each item of the list on its own line (every line ends with a newline). Return the number of lines written.",
+   "example": "write_lines('out1.txt', ['a', 'b', 'c'])  ->  3",
+   "entry_name": "write_lines",
+   "starter_code": "def write_lines(path, lines):\n    # open the file with mode 'w' and write line + '\\n'\n    pass\n",
+   "setup_code": "with open('notes.txt', 'w') as _f:\n    _f.write('data science is fun\\n')\n    _f.write('python is a tool\\n')\n    _f.write('practice makes progress\\n')\nwith open('numbers.txt', 'w') as _f:\n    _f.write('10\\n20\\n30\\n40\\n')\n",
+   "tests": [
+    {
+     "expr": "write_lines('out1.txt', ['a', 'b', 'c'])",
+     "expected": 3
+    },
+    {
+     "expr": "[write_lines('out2.txt', ['x']), open('out2.txt').read()][1]",
+     "expected": "x\n"
+    },
+    {
+     "expr": "[write_lines('out3.txt', []), open('out3.txt').read()][1]",
+     "expected": ""
+    },
+    {
+     "expr": "[write_lines('out4.txt', ['hi', 'there']), open('out4.txt').read()][1]",
+     "expected": "hi\nthere\n"
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 13,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w13-longest-line",
+   "title": "The longest line",
+   "statement": "Write <code>longest_line(path)</code> that returns the longest line of the file, without the newline character. Return <code>''</code> for an empty file.",
+   "example": "longest_line('notes.txt')  ->  'practice makes progress'",
+   "entry_name": "longest_line",
+   "starter_code": "def longest_line(path):\n    # strip each line, then compare its length with the best so far\n    pass\n",
+   "setup_code": "with open('notes.txt', 'w') as _f:\n    _f.write('data science is fun\\n')\n    _f.write('python is a tool\\n')\n    _f.write('practice makes progress\\n')\nwith open('numbers.txt', 'w') as _f:\n    _f.write('10\\n20\\n30\\n40\\n')\n",
+   "tests": [
+    {
+     "call": "longest_line",
+     "args": [
+      "notes.txt"
+     ],
+     "expected": "practice makes progress"
+    },
+    {
+     "call": "longest_line",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": "10"
+    },
+    {
+     "call": "longest_line",
+     "args": [
+      "notes.txt"
+     ],
+     "expected": "practice makes progress"
+    },
+    {
+     "call": "longest_line",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": "10"
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 13,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w13-most-common-word",
+   "title": "Most common word in a file",
+   "statement": "Write <code>most_common_word(path)</code> that returns the word appearing most often in the file. If several tie, return the one that is first in alphabetical order.",
+   "example": "most_common_word('notes.txt')  ->  'is'",
+   "entry_name": "most_common_word",
+   "starter_code": "def most_common_word(path):\n    # read the whole file, split it, count in a dictionary\n    pass\n",
+   "setup_code": "with open('notes.txt', 'w') as _f:\n    _f.write('data science is fun\\n')\n    _f.write('python is a tool\\n')\n    _f.write('practice makes progress\\n')\nwith open('numbers.txt', 'w') as _f:\n    _f.write('10\\n20\\n30\\n40\\n')\n",
+   "tests": [
+    {
+     "call": "most_common_word",
+     "args": [
+      "notes.txt"
+     ],
+     "expected": "is"
+    },
+    {
+     "call": "most_common_word",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": "10"
+    },
+    {
+     "call": "most_common_word",
+     "args": [
+      "notes.txt"
+     ],
+     "expected": "is"
+    },
+    {
+     "call": "most_common_word",
+     "args": [
+      "numbers.txt"
+     ],
+     "expected": "10"
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 13,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w13-append-and-count",
+   "title": "Append to a log",
+   "statement": "Write <code>append_and_count(path, text)</code> that adds one more line to the end of the file (mode <code>'a'</code>) and returns the new number of lines.",
+   "example": "[write_lines_helper('log1.txt', ['a']), append_and_count('log1.txt', 'b')][1]  ->  2",
+   "entry_name": "append_and_count",
+   "starter_code": "def append_and_count(path, text):\n    # open with 'a' to append, then re-open to count\n    pass\n",
+   "setup_code": "with open('notes.txt', 'w') as _f:\n    _f.write('data science is fun\\n')\n    _f.write('python is a tool\\n')\n    _f.write('practice makes progress\\n')\nwith open('numbers.txt', 'w') as _f:\n    _f.write('10\\n20\\n30\\n40\\n')\ndef write_lines_helper(path, lines):\n    with open(path, 'w') as _f:\n        for _l in lines:\n            _f.write(_l + '\\n')\n",
+   "tests": [
+    {
+     "expr": "[write_lines_helper('log1.txt', ['a']), append_and_count('log1.txt', 'b')][1]",
+     "expected": 2
+    },
+    {
+     "expr": "[write_lines_helper('log2.txt', []), append_and_count('log2.txt', 'first')][1]",
+     "expected": 1
+    },
+    {
+     "expr": "[write_lines_helper('log3.txt', ['a', 'b']), append_and_count('log3.txt', 'c'), open('log3.txt').read()][2]",
+     "expected": "a\nb\nc\n"
+    },
+    {
+     "expr": "[write_lines_helper('log4.txt', ['x']), append_and_count('log4.txt', 'y'), append_and_count('log4.txt', 'z')][2]",
+     "expected": 3
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  },
+  {
+   "week_no": 14,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w14-headers",
+   "title": "Read the column names",
+   "statement": "Write <code>headers(path)</code> that returns the first line of a CSV file as a list of column names. The file <code>scores.csv</code> is ready for you.",
+   "example": "headers('scores.csv')  ->  ['name', 'midterm', 'final']",
+   "entry_name": "headers",
+   "starter_code": "def headers(path):\n    # read one line, strip it, then split on the comma\n    pass\n",
+   "setup_code": "with open('scores.csv', 'w') as _f:\n    _f.write('name,midterm,final\\n')\n    _f.write('Ana,72,88\\n')\n    _f.write('Bo,55,61\\n')\n    _f.write('Chai,90,94\\n')\n    _f.write('Dao,40,52\\n')\n",
+   "tests": [
+    {
+     "call": "headers",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": [
+      "name",
+      "midterm",
+      "final"
+     ]
+    },
+    {
+     "call": "headers",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": [
+      "name",
+      "midterm",
+      "final"
+     ]
+    },
+    {
+     "call": "headers",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": [
+      "name",
+      "midterm",
+      "final"
+     ]
+    },
+    {
+     "call": "headers",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": [
+      "name",
+      "midterm",
+      "final"
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 1
+  },
+  {
+   "week_no": 14,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w14-row-count",
+   "title": "How many data rows?",
+   "statement": "Write <code>row_count(path)</code> that returns how many data rows a CSV file has (do not count the header line).",
+   "example": "row_count('scores.csv')  ->  4",
+   "entry_name": "row_count",
+   "starter_code": "def row_count(path):\n    # count all lines, then subtract 1\n    pass\n",
+   "setup_code": "with open('scores.csv', 'w') as _f:\n    _f.write('name,midterm,final\\n')\n    _f.write('Ana,72,88\\n')\n    _f.write('Bo,55,61\\n')\n    _f.write('Chai,90,94\\n')\n    _f.write('Dao,40,52\\n')\n",
+   "tests": [
+    {
+     "call": "row_count",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": 4
+    },
+    {
+     "call": "row_count",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": 4
+    },
+    {
+     "call": "row_count",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": 4
+    },
+    {
+     "call": "row_count",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": 4
+    }
+   ],
+   "points": 10,
+   "sort_order": 2
+  },
+  {
+   "week_no": 14,
+   "level": 1,
+   "level_title": "First Steps",
+   "level_subtitle": "Warm-up - get the idea working",
+   "slug": "w14-column-values",
+   "title": "Get one column",
+   "statement": "Write <code>column_values(path, column)</code> that returns the values of that column (as text) for every data row.",
+   "example": "column_values('scores.csv', 'name')  ->  ['Ana', 'Bo', 'Chai', 'Dao']",
+   "entry_name": "column_values",
+   "starter_code": "def column_values(path, column):\n    # find the position of the column in the header first\n    pass\n",
+   "setup_code": "with open('scores.csv', 'w') as _f:\n    _f.write('name,midterm,final\\n')\n    _f.write('Ana,72,88\\n')\n    _f.write('Bo,55,61\\n')\n    _f.write('Chai,90,94\\n')\n    _f.write('Dao,40,52\\n')\n",
+   "tests": [
+    {
+     "call": "column_values",
+     "args": [
+      "scores.csv",
+      "name"
+     ],
+     "expected": [
+      "Ana",
+      "Bo",
+      "Chai",
+      "Dao"
+     ]
+    },
+    {
+     "call": "column_values",
+     "args": [
+      "scores.csv",
+      "midterm"
+     ],
+     "expected": [
+      "72",
+      "55",
+      "90",
+      "40"
+     ]
+    },
+    {
+     "call": "column_values",
+     "args": [
+      "scores.csv",
+      "final"
+     ],
+     "expected": [
+      "88",
+      "61",
+      "94",
+      "52"
+     ]
+    },
+    {
+     "call": "column_values",
+     "args": [
+      "scores.csv",
+      "name"
+     ],
+     "expected": [
+      "Ana",
+      "Bo",
+      "Chai",
+      "Dao"
+     ]
+    }
+   ],
+   "points": 10,
+   "sort_order": 3
+  },
+  {
+   "week_no": 14,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w14-average-column",
+   "title": "Average a column",
+   "statement": "Write <code>average_column(path, column)</code> that returns the mean of a numeric column, rounded to 2 decimals.",
+   "example": "average_column('scores.csv', 'midterm')  ->  64.25",
+   "entry_name": "average_column",
+   "starter_code": "def average_column(path, column):\n    # convert each value with float() before adding\n    pass\n",
+   "setup_code": "with open('scores.csv', 'w') as _f:\n    _f.write('name,midterm,final\\n')\n    _f.write('Ana,72,88\\n')\n    _f.write('Bo,55,61\\n')\n    _f.write('Chai,90,94\\n')\n    _f.write('Dao,40,52\\n')\n",
+   "tests": [
+    {
+     "call": "average_column",
+     "args": [
+      "scores.csv",
+      "midterm"
+     ],
+     "expected": 64.25
+    },
+    {
+     "call": "average_column",
+     "args": [
+      "scores.csv",
+      "final"
+     ],
+     "expected": 73.75
+    },
+    {
+     "call": "average_column",
+     "args": [
+      "scores.csv",
+      "midterm"
+     ],
+     "expected": 64.25
+    },
+    {
+     "call": "average_column",
+     "args": [
+      "scores.csv",
+      "final"
+     ],
+     "expected": 73.75
+    }
+   ],
+   "points": 15,
+   "sort_order": 1
+  },
+  {
+   "week_no": 14,
+   "level": 2,
+   "level_title": "A Bit More",
+   "level_subtitle": "Put several ideas together",
+   "slug": "w14-top-student",
+   "title": "Best final score",
+   "statement": "Write <code>top_student(path)</code> that returns the name from the row with the highest <code>final</code> score.",
+   "example": "top_student('scores.csv')  ->  'Chai'",
+   "entry_name": "top_student",
+   "starter_code": "def top_student(path):\n    # track the best score and the name that goes with it\n    pass\n",
+   "setup_code": "with open('scores.csv', 'w') as _f:\n    _f.write('name,midterm,final\\n')\n    _f.write('Ana,72,88\\n')\n    _f.write('Bo,55,61\\n')\n    _f.write('Chai,90,94\\n')\n    _f.write('Dao,40,52\\n')\n",
+   "tests": [
+    {
+     "call": "top_student",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": "Chai"
+    },
+    {
+     "call": "top_student",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": "Chai"
+    },
+    {
+     "call": "top_student",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": "Chai"
+    },
+    {
+     "call": "top_student",
+     "args": [
+      "scores.csv"
+     ],
+     "expected": "Chai"
+    }
+   ],
+   "points": 15,
+   "sort_order": 2
+  },
+  {
+   "week_no": 14,
+   "level": 3,
+   "level_title": "Challenge",
+   "level_subtitle": "Stretch yourself",
+   "slug": "w14-write-summary",
+   "title": "Write a summary file",
+   "statement": "Write <code>write_summary(in_path, out_path)</code> that creates a new CSV with the header <code>name,average</code> and one row per student holding the average of their midterm and final, rounded to 1 decimal. Return the number of data rows written.",
+   "example": "write_summary('scores.csv', 'summary1.csv')  ->  4",
+   "entry_name": "write_summary",
+   "starter_code": "def write_summary(in_path, out_path):\n    # read, calculate, then write - one step at a time\n    pass\n",
+   "setup_code": "with open('scores.csv', 'w') as _f:\n    _f.write('name,midterm,final\\n')\n    _f.write('Ana,72,88\\n')\n    _f.write('Bo,55,61\\n')\n    _f.write('Chai,90,94\\n')\n    _f.write('Dao,40,52\\n')\n",
+   "tests": [
+    {
+     "expr": "write_summary('scores.csv', 'summary1.csv')",
+     "expected": 4
+    },
+    {
+     "expr": "[write_summary('scores.csv', 'summary2.csv'), open('summary2.csv').readline().strip()][1]",
+     "expected": "name,average"
+    },
+    {
+     "expr": "[write_summary('scores.csv', 'summary3.csv'), open('summary3.csv').read().strip().split('\\n')[1]][1]",
+     "expected": "Ana,80.0"
+    },
+    {
+     "expr": "[write_summary('scores.csv', 'summary4.csv'), len(open('summary4.csv').read().strip().split('\\n'))][1]",
+     "expected": 5
+    }
+   ],
+   "points": 25,
+   "sort_order": 1
+  }
+ ]
+}

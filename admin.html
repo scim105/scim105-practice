@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCIM 105 · Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">py</div>
+  <div class="brand">
+    <h1>SCIM 105 · Admin</h1>
+    <p>Course content &amp; student progress</p>
+  </div>
+  <div class="topbar-right">
+    <a class="btn small ghost" href="index.html">← Student view</a>
+    <div class="who" data-who></div>
+    <button class="btn small" data-signout>Sign out</button>
+  </div>
+</header>
+
+<main class="page">
+  <div id="denied" class="panel hidden">
+    <h3>This page is for the course admin</h3>
+    <p class="hint">Your account is signed in but is not marked as an admin.
+       Run <code>sql/03_make_me_admin.sql</code> in Supabase with your e-mail, then reload this page.</p>
+  </div>
+
+  <div id="admin" class="hidden">
+    <div class="tabs">
+      <div class="tab on" data-tab="weeks">1 · Weeks</div>
+      <div class="tab" data-tab="problems">2 · Problems</div>
+      <div class="tab" data-tab="ai">3 · Generate with AI</div>
+      <div class="tab" data-tab="students">4 · Student progress</div>
+    </div>
+
+    <!-- ============================ WEEKS ============================ -->
+    <section class="panel tabpage" id="page-weeks">
+      <h3>Weekly topics (the cards on the main page)</h3>
+      <p class="hint">Change the wording, tick <b>Open</b> to let students in, then press <b>Save</b> on that row.
+         A week only becomes clickable when it is Open <i>and</i> has at least one problem.</p>
+      <table class="grid" id="weeks-table"></table>
+
+      <h3 style="margin-top:34px">Add a new week</h3>
+      <div class="row">
+        <div><label class="f">Week number</label><input type="number" id="nw-no" min="1" value="16"></div>
+        <div><label class="f">Title</label><input type="text" id="nw-title" placeholder="e.g. Recursion"></div>
+        <div><label class="f">Subtitle</label><input type="text" id="nw-sub" placeholder="e.g. Functions that call themselves"></div>
+      </div>
+      <button class="btn primary" style="margin-top:18px" id="nw-add">Add week</button>
+    </section>
+
+    <!-- =========================== PROBLEMS =========================== -->
+    <section class="panel tabpage hidden" id="page-problems">
+      <h3>Practice problems</h3>
+      <p class="hint">Pick a week, then edit any problem. Everything a student sees comes from these fields.</p>
+      <div class="row">
+        <div>
+          <label class="f">Week</label>
+          <select id="pb-week"></select>
+        </div>
+        <div style="align-self:end">
+          <button class="btn" id="pb-new">+ New problem in this week</button>
+        </div>
+      </div>
+      <table class="grid" id="pb-table" style="margin-top:22px"></table>
+
+      <div id="pb-editor" class="hidden" style="margin-top:30px;border-top:1px solid var(--border);padding-top:24px">
+        <h3 id="pb-editor-title">Edit problem</h3>
+        <div class="row">
+          <div><label class="f">Title (shown to students)</label><input type="text" id="f-title"></div>
+          <div><label class="f">Short name / slug (must be unique)</label><input type="text" id="f-slug"></div>
+          <div><label class="f">Level (1, 2 or 3)</label><input type="number" id="f-level" min="1" max="3"></div>
+          <div><label class="f">Points</label><input type="number" id="f-points" min="0"></div>
+          <div><label class="f">Order inside the level</label><input type="number" id="f-order" min="1"></div>
+          <div><label class="f">Function / class the tests call</label><input type="text" id="f-entry"></div>
+          <div><label class="f">Level heading</label><input type="text" id="f-ltitle"></div>
+          <div><label class="f">Level sub-heading</label><input type="text" id="f-lsub"></div>
+          <div><label class="f">Shown to students?</label>
+            <select id="f-active"><option value="true">Yes</option><option value="false">No (hidden)</option></select></div>
+        </div>
+        <label class="f">Question (simple HTML allowed, e.g. &lt;code&gt;add(a, b)&lt;/code&gt;)</label>
+        <textarea id="f-statement" rows="3"></textarea>
+        <label class="f">Example line under the question</label>
+        <textarea id="f-example" rows="1"></textarea>
+        <label class="f">Starter code the student sees</label>
+        <textarea id="f-starter" rows="6"></textarea>
+        <label class="f">Setup code (optional — runs before the student's code, e.g. to create a data file)</label>
+        <textarea id="f-setup" rows="4"></textarea>
+        <label class="f">Test cases (JSON list)</label>
+        <textarea id="f-tests" rows="8"></textarea>
+        <p class="hint" style="margin-top:8px">Each test is either
+          <code>{"call":"add","args":[2,3],"expected":5}</code> or
+          <code>{"expr":"Rectangle(3,4).area()","expected":12}</code>.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+          <button class="btn primary" id="f-save">Save problem</button>
+          <button class="btn" id="f-check">Check the test JSON</button>
+          <button class="btn danger" id="f-delete">Delete this problem</button>
+          <button class="btn ghost" id="f-cancel">Close</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== AI ============================== -->
+    <section class="panel tabpage hidden" id="page-ai">
+      <h3>Generate problems with a free AI chatbot</h3>
+      <p class="hint">No API key, no cost. Three steps: copy the prompt → paste it into
+         Gemini / ChatGPT / Claude → paste the answer back here.</p>
+
+      <div class="row">
+        <div><label class="f">Week</label><select id="ai-week"></select></div>
+        <div><label class="f">Level</label>
+          <select id="ai-level"><option value="1">1 · First Steps</option><option value="2">2 · A Bit More</option><option value="3">3 · Challenge</option></select></div>
+        <div><label class="f">How many problems</label><input type="number" id="ai-count" value="3" min="1" max="8"></div>
+        <div><label class="f">Extra instruction (optional)</label><input type="text" id="ai-extra" placeholder="e.g. use temperature data"></div>
+      </div>
+
+      <label class="f">Step 1 — copy this prompt</label>
+      <textarea id="ai-prompt" rows="12" readonly></textarea>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn primary" id="ai-copy">Copy the prompt</button>
+        <button class="btn" id="ai-refresh">Rebuild the prompt</button>
+        <a class="btn ghost" href="https://gemini.google.com/" target="_blank" rel="noopener">Open Gemini ↗</a>
+      </div>
+
+      <label class="f" style="margin-top:26px">Step 2 — paste the AI's answer here (the JSON list)</label>
+      <textarea id="ai-paste" rows="10" placeholder="[ { &quot;slug&quot;: ... } ]"></textarea>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn" id="ai-preview">Step 3 — check it</button>
+        <button class="btn primary hidden" id="ai-import">Step 4 — add to the week</button>
+      </div>
+      <div id="ai-report" style="margin-top:18px"></div>
+      <p class="hint" style="margin-top:20px">⚠️ Always solve a generated problem yourself once (or press Run tests with
+         the model answer) before opening the week — an AI can write a test with the wrong expected answer.</p>
+    </section>
+
+    <!-- =========================== STUDENTS =========================== -->
+    <section class="panel tabpage hidden" id="page-students">
+      <h3>Student progress</h3>
+      <p class="hint">Everything below is live from the database. Use the download buttons for Excel.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+        <button class="btn small" id="dl-summary">⬇ Summary CSV</button>
+        <button class="btn small" id="dl-attempts">⬇ All attempts CSV</button>
+        <button class="btn small" id="dl-logins">⬇ All logins CSV</button>
+        <button class="btn small" id="reload">↻ Reload</button>
+      </div>
+      <table class="grid" id="st-table"></table>
+
+      <div id="st-detail" class="hidden" style="margin-top:34px;border-top:1px solid var(--border);padding-top:24px">
+        <h3 id="st-name"></h3>
+        <p class="hint" id="st-meta"></p>
+        <h4 style="margin:22px 0 8px">Attempts per problem</h4>
+        <table class="grid" id="st-problems"></table>
+        <h4 style="margin:26px 0 8px">Login history</h4>
+        <table class="grid" id="st-logins"></table>
+      </div>
+    </section>
+  </div>
+
+  <div id="loading" class="panel"><p class="hint">Loading…</p></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(async function () {
+  const S = window.SCIM;
+  if (!S.configured) { location.href = "index.html"; return; }
+  const ctx = await S.getSession();
+  if (!ctx) { location.href = "index.html"; return; }
+  S.fillHeader(ctx);
+  document.getElementById("loading").classList.add("hidden");
+  if (!ctx.profile.is_admin) { document.getElementById("denied").classList.remove("hidden"); return; }
+  document.getElementById("admin").classList.remove("hidden");
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (t) => t ? new Date(t).toLocaleString() : "—";
+
+  /* ---------------- tabs ---------------- */
+  document.querySelectorAll(".tab").forEach(t => {
+    t.onclick = () => {
+      document.querySelectorAll(".tab").forEach(x => x.classList.toggle("on", x === t));
+      document.querySelectorAll(".tabpage").forEach(p =>
+        p.classList.toggle("hidden", p.id !== "page-" + t.dataset.tab));
+      if (t.dataset.tab === "students") loadStudents();
+    };
+  });
+
+  /* ================= WEEKS ================= */
+  let weeks = [];
+  async function loadWeeks() {
+    const { data } = await S.sb.from("weeks").select("*").order("sort_order");
+    weeks = data || [];
+    $("weeks-table").innerHTML =
+      "<tr><th>No.</th><th>Title</th><th>Subtitle</th><th>Open</th><th></th></tr>" +
+      weeks.map(w =>
+        '<tr data-id="' + w.id + '">' +
+        "<td>" + w.week_no + "</td>" +
+        '<td><input type="text" class="w-title" value="' + S.esc(w.title) + '"></td>' +
+        '<td><input type="text" class="w-sub" value="' + S.esc(w.subtitle || "") + '"></td>' +
+        '<td style="text-align:center"><input type="checkbox" class="w-open"' + (w.is_open ? " checked" : "") + "></td>" +
+        '<td><button class="btn small w-save">Save</button> ' +
+        '<button class="btn small danger w-del">Delete</button></td></tr>').join("");
+
+    $("weeks-table").querySelectorAll("tr[data-id]").forEach(tr => {
+      const id = Number(tr.dataset.id);
+      tr.querySelector(".w-save").onclick = async () => {
+        const { error } = await S.sb.from("weeks").update({
+          title: tr.querySelector(".w-title").value.trim(),
+          subtitle: tr.querySelector(".w-sub").value.trim(),
+          is_open: tr.querySelector(".w-open").checked
+        }).eq("id", id);
+        S.toast(error ? "Error: " + error.message : "Saved ✓", error ? "err" : "ok");
+        if (!error) loadWeeks();
+      };
+      tr.querySelector(".w-del").onclick = async () => {
+        if (!confirm("Delete this week AND all its problems? This cannot be undone.")) return;
+        const { error } = await S.sb.from("weeks").delete().eq("id", id);
+        S.toast(error ? "Error: " + error.message : "Deleted", error ? "err" : "ok");
+        loadWeeks(); fillWeekSelectors();
+      };
+    });
+    fillWeekSelectors();
+  }
+
+  $("nw-add").onclick = async () => {
+    const no = parseInt($("nw-no").value, 10);
+    if (!no) { S.toast("Please give a week number", "err"); return; }
+    const { error } = await S.sb.from("weeks").insert({
+      week_no: no, title: $("nw-title").value.trim() || ("Week " + no),
+      subtitle: $("nw-sub").value.trim(), sort_order: no, is_open: false
+    });
+    S.toast(error ? "Error: " + error.message : "Week added ✓", error ? "err" : "ok");
+    if (!error) { $("nw-title").value = ""; $("nw-sub").value = ""; loadWeeks(); }
+  };
+
+  function fillWeekSelectors() {
+    const options = weeks.map(w =>
+      '<option value="' + w.week_no + '">Week ' + w.week_no + " · " + S.esc(w.title) + "</option>").join("");
+    ["pb-week", "ai-week"].forEach(id => {
+      const keep = $(id).value;
+      $(id).innerHTML = options;
+      if (keep) $(id).value = keep;
+    });
+  }
+
+  /* ================= PROBLEMS ================= */
+  let problems = [], editingId = null;
+  async function loadProblems() {
+    const wk = parseInt($("pb-week").value, 10);
+    const { data } = await S.sb.from("problems").select("*").eq("week_no", wk)
+      .order("level").order("sort_order");
+    problems = data || [];
+    $("pb-table").innerHTML =
+      "<tr><th>Lv</th><th>#</th><th>Title</th><th>Function</th><th>Tests</th><th>Pts</th><th>Shown</th><th></th></tr>" +
+      (problems.length ? problems.map(p =>
+        "<tr><td>" + p.level + "</td><td>" + p.sort_order + "</td><td>" + S.esc(p.title) + "</td>" +
+        "<td class='mono'>" + S.esc(p.entry_name) + "</td><td>" + (p.tests || []).length + "</td>" +
+        "<td>" + p.points + "</td><td>" + (p.is_active
+          ? '<span class="pill on">yes</span>' : '<span class="pill">hidden</span>') + "</td>" +
+        '<td><button class="btn small pb-edit" data-id="' + p.id + '">Edit</button></td></tr>').join("")
+        : '<tr><td colspan="8">No problems in this week yet.</td></tr>');
+    $("pb-table").querySelectorAll(".pb-edit").forEach(b =>
+      b.onclick = () => openEditor(problems.find(p => p.id === Number(b.dataset.id))));
+  }
+  $("pb-week").onchange = loadProblems;
+
+  function openEditor(p) {
+    editingId = p ? p.id : null;
+    $("pb-editor").classList.remove("hidden");
+    $("pb-editor-title").textContent = p ? "Edit: " + p.title : "New problem";
+    const wk = parseInt($("pb-week").value, 10);
+    const sample = problems.length ? problems[problems.length - 1] : null;
+    const v = p || {
+      title: "", slug: "w" + String(wk).padStart(2, "0") + "-", level: 1, points: 10,
+      sort_order: problems.length + 1, entry_name: "",
+      level_title: sample ? sample.level_title : "First Steps",
+      level_subtitle: sample ? sample.level_subtitle : "",
+      statement: "", example: "", starter_code: "", setup_code: "",
+      tests: [{ call: "", args: [], expected: null }], is_active: true
+    };
+    $("f-title").value = v.title;         $("f-slug").value = v.slug;
+    $("f-level").value = v.level;         $("f-points").value = v.points;
+    $("f-order").value = v.sort_order;    $("f-entry").value = v.entry_name;
+    $("f-ltitle").value = v.level_title || "";
+    $("f-lsub").value = v.level_subtitle || "";
+    $("f-active").value = String(v.is_active !== false);
+    $("f-statement").value = v.statement; $("f-example").value = v.example || "";
+    $("f-starter").value = v.starter_code || ""; $("f-setup").value = v.setup_code || "";
+    $("f-tests").value = JSON.stringify(v.tests || [], null, 1);
+    $("f-delete").classList.toggle("hidden", !p);
+    $("pb-editor").scrollIntoView({ behavior: "smooth" });
+  }
+  $("pb-new").onclick = () => openEditor(null);
+  $("f-cancel").onclick = () => $("pb-editor").classList.add("hidden");
+
+  function readTests() {
+    let tests;
+    try { tests = JSON.parse($("f-tests").value); }
+    catch (e) { S.toast("The test JSON is not valid: " + e.message, "err"); return null; }
+    if (!Array.isArray(tests)) { S.toast("The tests must be a list [ ... ]", "err"); return null; }
+    for (const t of tests) {
+      if (!("expected" in t)) { S.toast('Every test needs an "expected" value', "err"); return null; }
+      if (!t.expr && !t.call) { S.toast('Every test needs "call" or "expr"', "err"); return null; }
+    }
+    return tests;
+  }
+  $("f-check").onclick = () => { if (readTests()) S.toast("The test JSON looks fine ✓", "ok"); };
+
+  $("f-save").onclick = async () => {
+    const tests = readTests(); if (!tests) return;
+    const row = {
+      week_no: parseInt($("pb-week").value, 10),
+      level: parseInt($("f-level").value, 10) || 1,
+      level_title: $("f-ltitle").value.trim(),
+      level_subtitle: $("f-lsub").value.trim(),
+      slug: $("f-slug").value.trim(),
+      title: $("f-title").value.trim(),
+      statement: $("f-statement").value.trim(),
+      example: $("f-example").value.trim(),
+      entry_name: $("f-entry").value.trim(),
+      starter_code: $("f-starter").value,
+      setup_code: $("f-setup").value.trim() || null,
+      tests: tests,
+      points: parseInt($("f-points").value, 10) || 0,
+      sort_order: parseInt($("f-order").value, 10) || 1,
+      is_active: $("f-active").value === "true"
+    };
+    if (!row.slug || !row.title || !row.entry_name) {
+      S.toast("Title, slug and function name are all required", "err"); return;
+    }
+    const { error } = editingId
+      ? await S.sb.from("problems").update(row).eq("id", editingId)
+      : await S.sb.from("problems").insert(row);
+    S.toast(error ? "Error: " + error.message : "Saved ✓", error ? "err" : "ok");
+    if (!error) { $("pb-editor").classList.add("hidden"); loadProblems(); }
+  };
+
+  $("f-delete").onclick = async () => {
+    if (!editingId || !confirm("Delete this problem?")) return;
+    const { error } = await S.sb.from("problems").delete().eq("id", editingId);
+    S.toast(error ? "Error: " + error.message : "Deleted", error ? "err" : "ok");
+    if (!error) { $("pb-editor").classList.add("hidden"); loadProblems(); }
+  };
+
+  /* ================= AI PROMPT ================= */
+  function buildPrompt() {
+    const wk = parseInt($("ai-week").value, 10);
+    const w = weeks.find(x => x.week_no === wk) || { title: "", subtitle: "" };
+    const level = $("ai-level").value;
+    const n = $("ai-count").value;
+    const extra = $("ai-extra").value.trim();
+    const levelWord = { "1": "very easy warm-up", "2": "moderate", "3": "challenging" }[level];
+    const slugPrefix = "w" + String(wk).padStart(2, "0") + "-";
+    $("ai-prompt").value =
+"You are helping me write Python practice problems for SCIM 105 " +
+"(Fundamentals of Scientific Computing), a first-year university course.\n\n" +
+"Week " + wk + " topic: " + w.title + " — " + (w.subtitle || "") + "\n" +
+"Difficulty: " + levelWord + " (level " + level + " of 3).\n" +
+"Write " + n + " problems." + (extra ? " " + extra : "") + "\n\n" +
+"RULES\n" +
+"1. Each problem must be solved by ONE Python function (or one class) that RETURNS a value. Never use input(). Never print the answer.\n" +
+"2. Only plain Python - no imports of outside libraries (no numpy, no pandas).\n" +
+"3. Give exactly 4 test cases per problem, including one edge case (empty list, zero, negative...).\n" +
+"4. Work out every expected answer by hand and double-check it. The expected value must be exactly what the correct function returns.\n" +
+"5. Round any floating point answer inside the function (say 'rounded to 2 decimals') so the expected value is exact.\n" +
+"6. slug must start with \"" + slugPrefix + "\" and use only lowercase letters, numbers and hyphens.\n" +
+"7. starter_code must define the function with the correct name and end with `pass`, plus one short comment hint.\n" +
+"8. statement may use simple HTML like <code>...</code>. Keep the English simple - many students are not native speakers.\n\n" +
+"ANSWER WITH JSON ONLY - a list in exactly this shape, no explanation before or after:\n" +
+"[\n" +
+"  {\n" +
+'    "slug": "' + slugPrefix + 'example-name",\n' +
+'    "title": "Short title",\n' +
+'    "statement": "Write <code>example(a, b)</code> that returns ...",\n' +
+'    "entry_name": "example",\n' +
+'    "starter_code": "def example(a, b):\\n    # hint\\n    pass\\n",\n' +
+'    "tests": [\n' +
+'      {"call": "example", "args": [1, 2], "expected": 3},\n' +
+'      {"call": "example", "args": [0, 0], "expected": 0},\n' +
+'      {"call": "example", "args": [-1, 5], "expected": 4},\n' +
+'      {"call": "example", "args": [2.5, 2.5], "expected": 5.0}\n' +
+"    ]\n" +
+"  }\n" +
+"]\n\n" +
+"For a class-based problem use this test form instead: " +
+'{"expr": "Rectangle(3, 4).area()", "expected": 12}';
+  }
+  ["ai-week", "ai-level", "ai-count", "ai-extra"].forEach(id => {
+    $(id).addEventListener("change", buildPrompt);
+    $(id).addEventListener("keyup", buildPrompt);
+  });
+  $("ai-refresh").onclick = buildPrompt;
+  $("ai-copy").onclick = async () => {
+    $("ai-prompt").select();
+    try { await navigator.clipboard.writeText($("ai-prompt").value); S.toast("Prompt copied ✓", "ok"); }
+    catch (e) { document.execCommand("copy"); S.toast("Prompt copied ✓", "ok"); }
+  };
+
+  let aiRows = null;
+  $("ai-preview").onclick = () => {
+    aiRows = null;
+    $("ai-import").classList.add("hidden");
+    let text = $("ai-paste").value.trim();
+    const a = text.indexOf("["), b = text.lastIndexOf("]");
+    if (a > -1 && b > a) text = text.slice(a, b + 1);       // ignore chatter around the JSON
+    let list;
+    try { list = JSON.parse(text); }
+    catch (e) {
+      $("ai-report").innerHTML = '<div class="result-head fail"><div class="msg">That is not valid JSON: ' +
+        S.esc(e.message) + "</div></div>"; return;
+    }
+    if (!Array.isArray(list)) list = [list];
+    const problems2 = [], errs = [];
+    list.forEach((p, i) => {
+      const where = "Problem " + (i + 1) + ": ";
+      if (!p.slug || !p.title || !p.entry_name) { errs.push(where + "slug, title and entry_name are required"); return; }
+      if (!Array.isArray(p.tests) || p.tests.length === 0) { errs.push(where + "no tests"); return; }
+      for (const t of p.tests) {
+        if (!("expected" in t)) { errs.push(where + 'a test has no "expected"'); return; }
+        if (!t.call && !t.expr) { errs.push(where + 'a test has no "call" or "expr"'); return; }
+      }
+      problems2.push(p);
+    });
+    $("ai-report").innerHTML =
+      (errs.length ? '<div class="result-head fail"><div class="msg">' +
+        errs.map(S.esc).join("<br>") + "</div></div>" : "") +
+      (problems2.length ? '<div class="result-head pass"><div class="score">' + problems2.length +
+        '</div><div class="msg">problem(s) ready to add</div></div>' +
+        problems2.map(p => '<div class="tcase ok"><div class="mark">✓</div><div class="body">' +
+          S.esc(p.title) + ' <span class="pill">' + S.esc(p.slug) + "</span>" +
+          '<div class="sub">' + p.tests.length + " tests · function <b>" + S.esc(p.entry_name) +
+          "</b></div></div></div>").join("") : "");
+    if (problems2.length && !errs.length) { aiRows = problems2; $("ai-import").classList.remove("hidden"); }
+  };
+
+  $("ai-import").onclick = async () => {
+    if (!aiRows) return;
+    const wk = parseInt($("ai-week").value, 10);
+    const level = parseInt($("ai-level").value, 10);
+    const lt = { 1: "First Steps", 2: "A Bit More", 3: "Challenge" }[level];
+    const ls = { 1: "Warm-up - get the idea working", 2: "Put several ideas together", 3: "Stretch yourself" }[level];
+    const { data: existing } = await S.sb.from("problems").select("sort_order")
+      .eq("week_no", wk).eq("level", level);
+    let next = (existing || []).reduce((m, r) => Math.max(m, r.sort_order), 0);
+    const rows = aiRows.map(p => ({
+      week_no: wk, level: level, level_title: lt, level_subtitle: ls,
+      slug: p.slug, title: p.title, statement: p.statement || p.title,
+      example: p.example || (p.tests[0].expr ? p.tests[0].expr : p.entry_name + "(...)") +
+               "  ->  " + JSON.stringify(p.tests[0].expected),
+      entry_name: p.entry_name,
+      starter_code: p.starter_code || ("def " + p.entry_name + "():\n    pass\n"),
+      setup_code: p.setup_code || null,
+      tests: p.tests, points: { 1: 10, 2: 15, 3: 25 }[level],
+      sort_order: ++next, is_active: true
+    }));
+    const { error } = await S.sb.from("problems").upsert(rows, { onConflict: "slug" });
+    if (error) { S.toast("Error: " + error.message, "err"); return; }
+    S.toast(rows.length + " problem(s) added to Week " + wk + " ✓", "ok");
+    $("ai-paste").value = ""; $("ai-report").innerHTML = "";
+    $("ai-import").classList.add("hidden"); aiRows = null;
+    $("pb-week").value = String(wk); loadProblems();
+  };
+
+  /* ================= STUDENTS ================= */
+  let people = [], logins = [], attempts = [], probIndex = {};
+  async function loadStudents() {
+    $("st-table").innerHTML = "<tr><td>Loading…</td></tr>";
+    const [pr, lg, at, pb] = await Promise.all([
+      S.sb.from("profiles").select("*").order("full_name"),
+      S.sb.from("logins").select("*").order("logged_in_at", { ascending: false }).limit(5000),
+      S.sb.from("attempts").select("*").order("created_at", { ascending: false }).limit(20000),
+      S.sb.from("problems").select("slug,title,week_no,points")
+    ]);
+    people = pr.data || []; logins = lg.data || []; attempts = at.data || [];
+    probIndex = {}; (pb.data || []).forEach(p => { probIndex[p.slug] = p; });
+
+    const stat = {};
+    people.forEach(p => (stat[p.id] = {
+      p, logins: 0, lastLogin: p.last_login_at, attempts: 0, solved: new Set(), points: 0
+    }));
+    logins.forEach(l => { if (stat[l.user_id]) stat[l.user_id].logins++; });
+    attempts.forEach(a => {
+      const s = stat[a.user_id]; if (!s) return;
+      s.attempts++;
+      if (a.passed && !s.solved.has(a.problem_id)) {
+        s.solved.add(a.problem_id);
+        s.points += (probIndex[a.problem_id] || {}).points || 0;
+      }
+    });
+
+    const rows = Object.values(stat).sort((a, b) => b.points - a.points);
+    $("st-table").innerHTML =
+      "<tr><th>Student</th><th>E-mail</th><th>Last login</th><th>Logins</th>" +
+      "<th>Attempts</th><th>Solved</th><th>Points</th><th></th></tr>" +
+      (rows.length ? rows.map(s =>
+        "<tr><td>" + S.esc(s.p.full_name || "—") + (s.p.is_admin ? ' <span class="pill">admin</span>' : "") +
+        "</td><td>" + S.esc(s.p.email) + "</td><td>" + fmt(s.lastLogin) + "</td><td>" + s.logins +
+        "</td><td>" + s.attempts + "</td><td>" + s.solved.size + "</td><td>" + s.points + "</td>" +
+        '<td><button class="btn small st-view" data-id="' + s.p.id + '">Details</button></td></tr>').join("")
+        : '<tr><td colspan="8">Nobody has signed in yet.</td></tr>');
+
+    $("st-table").querySelectorAll(".st-view").forEach(b =>
+      b.onclick = () => showStudent(b.dataset.id));
+  }
+  $("reload").onclick = loadStudents;
+
+  function showStudent(id) {
+    const person = people.find(p => p.id === id);
+    const mine = attempts.filter(a => a.user_id === id);
+    const myLogins = logins.filter(l => l.user_id === id);
+    $("st-detail").classList.remove("hidden");
+    $("st-name").textContent = (person.full_name || person.email);
+    $("st-meta").textContent = person.email + " · " + mine.length + " attempts · " +
+      myLogins.length + " logins · joined " + fmt(person.created_at);
+
+    const per = {};
+    mine.slice().reverse().forEach(a => {
+      const k = a.problem_id;
+      per[k] = per[k] || { week: a.week_no, tries: 0, best: 0, total: a.total_tests, solvedAt: null };
+      per[k].tries++;
+      per[k].best = Math.max(per[k].best, a.score || 0);
+      if (a.passed && !per[k].solvedAt) per[k].solvedAt = a.created_at;
+    });
+    const keys = Object.keys(per).sort((a, b) =>
+      (per[a].week - per[b].week) || a.localeCompare(b));
+    $("st-problems").innerHTML =
+      "<tr><th>Week</th><th>Problem</th><th>Attempts</th><th>Best score</th><th>Solved at</th></tr>" +
+      (keys.length ? keys.map(k =>
+        "<tr><td>" + (per[k].week || "—") + "</td><td>" +
+        S.esc((probIndex[k] || {}).title || k) + "</td><td>" + per[k].tries + "</td><td>" +
+        per[k].best + "/" + (per[k].total || "?") + "</td><td>" +
+        (per[k].solvedAt ? fmt(per[k].solvedAt) : "not yet") + "</td></tr>").join("")
+        : '<tr><td colspan="5">No attempts yet.</td></tr>');
+
+    $("st-logins").innerHTML = "<tr><th>When</th><th>Device</th></tr>" +
+      (myLogins.length ? myLogins.map(l =>
+        "<tr><td>" + fmt(l.logged_in_at) + "</td><td style='font-size:12.5px;color:var(--muted)'>" +
+        S.esc((l.user_agent || "").slice(0, 90)) + "</td></tr>").join("")
+        : '<tr><td colspan="2">No logins recorded.</td></tr>');
+    $("st-detail").scrollIntoView({ behavior: "smooth" });
+  }
+
+  /* ---- CSV downloads ---- */
+  function download(name, rows) {
+    const csv = rows.map(r => r.map(v => {
+      const s = v === null || v === undefined ? "" : String(v);
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    }).join(",")).join("\n");
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
+    a.download = name; a.click();
+  }
+  $("dl-summary").onclick = () => {
+    const head = [["name", "email", "last_login", "logins", "attempts", "solved", "points"]];
+    const body = Array.from($("st-table").querySelectorAll("tr")).slice(1).map(tr =>
+      Array.from(tr.querySelectorAll("td")).slice(0, 7).map(td => td.innerText.trim()));
+    download("scim105_summary.csv", head.concat(body));
+  };
+  $("dl-attempts").onclick = () => download("scim105_attempts.csv",
+    [["when", "name", "email", "week", "problem", "level", "passed", "score", "total_tests"]].concat(
+      attempts.map(a => [fmt(a.created_at), a.full_name, a.email, a.week_no, a.problem_id,
+                         a.level, a.passed, a.score, a.total_tests])));
+  $("dl-logins").onclick = () => download("scim105_logins.csv",
+    [["when", "name", "email"]].concat(
+      logins.map(l => [fmt(l.logged_in_at), l.full_name, l.email])));
+
+  /* ---------------- start ---------------- */
+  await loadWeeks();
+  await loadProblems();
+  buildPrompt();
+})();
+</script>
+</body>
+</html>

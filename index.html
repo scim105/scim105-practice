@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCIM 105 · Python Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo">py</div>
+  <div class="brand">
+    <h1 data-course-code>SCIM 105 · Python Practice</h1>
+    <p data-course-name>Fundamentals of Scientific Computing</p>
+  </div>
+  <div class="topbar-right hidden" id="userbox">
+    <div class="avatar" data-avatar>?</div>
+    <div class="who" data-who></div>
+    <a class="btn small ghost hidden" data-admin-link href="admin.html">Admin</a>
+    <button class="btn small" data-signout>Sign out</button>
+  </div>
+</header>
+
+<!-- ============================= LOGIN ============================= -->
+<section id="login-view" class="login-wrap hidden">
+  <div class="login-card">
+    <div class="logo">py</div>
+    <h2>Welcome 👋</h2>
+    <p class="lead">Sign in with your Mahidol Google account to access the weekly
+       Python practice sets. Your progress is saved securely under your verified account.</p>
+    <button class="btn-google" id="google-btn">
+      <svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.2 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9.1h12.4c-.5 2.9-2.2 5.4-4.7 7l7.3 5.7c4.3-3.9 6.8-9.8 6.8-17.2z"/><path fill="#FBBC05" d="M10.4 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6.1C1 16.4 0 20.1 0 24s1 7.6 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.3-5.7c-2 1.4-4.7 2.3-8.6 2.3-6.4 0-11.7-3.7-13.6-9.1l-7.8 6.1C6.5 42.6 14.6 48 24 48z"/></svg>
+      Sign in with Google
+    </button>
+    <p class="note">Use your Mahidol account — <span id="domain-list"></span></p>
+  </div>
+</section>
+
+<!-- =========================== DASHBOARD =========================== -->
+<section id="dash-view" class="page hidden">
+  <h2 class="big" id="hello">Welcome 👋</h2>
+  <p class="sub">Pick a practice set below. You can leave and come back — your solved problems are remembered.</p>
+  <div class="week-grid" id="weeks"></div>
+</section>
+
+<section id="loading" class="page"><p class="sub">Loading…</p></section>
+<section id="setup-warning" class="page hidden">
+  <div class="panel">
+    <h3>Almost there — one small step</h3>
+    <p class="hint">This website is not connected to your Supabase project yet.
+       Open <code>assets/config.js</code> and paste your Project URL and anon key
+       (Step 6 of the Admin Setup Guide).</p>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(async function () {
+  const S = window.SCIM, cfg = S.cfg;
+  document.querySelector("[data-course-code]").textContent = cfg.COURSE_CODE + " · Python Practice";
+  document.querySelector("[data-course-name]").textContent = cfg.COURSE_NAME;
+  document.getElementById("domain-list").innerHTML =
+    (cfg.ALLOWED_DOMAINS || []).map(d => "<b>@" + S.esc(d) + "</b>").join(", ") + ".";
+  document.getElementById("google-btn").onclick = S.signIn;
+
+  const show = (id) => {
+    ["login-view", "dash-view", "loading", "setup-warning"]
+      .forEach(v => document.getElementById(v).classList.toggle("hidden", v !== id));
+  };
+
+  if (!S.configured) { show("setup-warning"); return; }
+
+  const ctx = await S.getSession();
+  if (!ctx) { show("login-view"); return; }
+
+  document.getElementById("userbox").classList.remove("hidden");
+  S.fillHeader(ctx);
+  S.recordLogin(ctx);
+  document.getElementById("hello").textContent =
+    "Welcome, " + S.firstName(ctx.name, ctx.email) + " 👋";
+  show("dash-view");
+
+  const [weeksRes, problemsRes, solvedRes] = await Promise.all([
+    S.sb.from("weeks").select("*").order("sort_order", { ascending: true }),
+    S.sb.from("problems").select("week_no,slug,points").eq("is_active", true),
+    S.sb.from("attempts").select("problem_id").eq("passed", true)
+  ]);
+
+  const problems = problemsRes.data || [];
+  const solved = new Set((solvedRes.data || []).map(a => a.problem_id));
+  const totalByWeek = {}, doneByWeek = {};
+  problems.forEach(p => {
+    totalByWeek[p.week_no] = (totalByWeek[p.week_no] || 0) + 1;
+    if (solved.has(p.slug)) doneByWeek[p.week_no] = (doneByWeek[p.week_no] || 0) + 1;
+  });
+
+  const box = document.getElementById("weeks");
+  const weeks = weeksRes.data || [];
+  if (!weeks.length) {
+    box.innerHTML = '<div class="panel"><h3>No weeks yet</h3><p class="hint">Run ' +
+      '<code>sql/02_seed.sql</code> in Supabase, or add weeks from the Admin page.</p></div>';
+    return;
+  }
+  box.innerHTML = weeks.map(w => {
+    const total = totalByWeek[w.week_no] || 0;
+    const done = doneByWeek[w.week_no] || 0;
+    const open = w.is_open && total > 0;
+    const pct = total ? Math.round(100 * done / total) : 0;
+    const progress = (open && done)
+      ? '<div class="prog">' + done + " of " + total + ' solved<div class="bar"><i style="width:' + pct + '%"></i></div></div>'
+      : "";
+    const inner =
+      '<div class="row1"><span class="week-no">Week ' + w.week_no + '</span>' +
+      '<span class="badge ' + (open ? "open" : "soon") + '">' + (open ? "Open" : "Soon") + "</span></div>" +
+      "<h3>" + S.esc(w.title) + "</h3><p>" + S.esc(w.subtitle || "") + "</p>" + progress;
+    return open
+      ? '<a class="week-card open" href="week.html?week=' + w.week_no + '">' + inner + "</a>"
+      : '<div class="week-card soon">' + inner + "</div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>
