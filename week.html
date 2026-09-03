@@ -80,7 +80,7 @@ document.documentElement.setAttribute("data-theme",
       <span class="info" tabindex="0" title="Your own space to experiment: print something, try an idea, look at the data.&#10;&#10;Nothing written here is checked, scored or sent to your teacher - but it is kept on this computer for each problem, so it is still here when you come back.&#10;&#10;The setup code of the problem AND the answer you are writing on the left both run first, so you can call your own function straight away.&#10;&#10;You may import numpy, pandas, scipy, matplotlib.pyplot and other standard scientific libraries. A chart you draw is shown underneath.">i</span>
       <button class="btn small ghost x" id="scratch-close" title="Close the scratch pad">✕</button>
     </div>
-    <p class="scratch-line">Any attempts here are not graded.</p>
+    <p class="scratch-line">Nothing here is graded.</p>
 
     <div class="editor-shell">
       <div class="editor-bar">
@@ -126,6 +126,76 @@ def _scim_arm(limit):
     sys.settrace(_scim_tracer)
 
 
+# ---------------------------------------------------------------- input() ---
+# There is no keyboard behind a web page, so Python's own input() fails. These
+# stand in for it: one hands over the lines a test provides, one asks the person
+# sitting at the browser, and one explains itself when a problem has no input.
+
+class _ScimFeed(object):
+    """input() for a graded test - hands back the prepared lines, one per call."""
+    def __init__(self, lines):
+        self.lines = list(lines)
+
+    def __call__(self, prompt=''):
+        # The prompt is deliberately NOT printed: only what the program itself
+        # prints is compared, so wording the question differently is harmless.
+        if not self.lines:
+            raise EOFError('your program asked for more input than this test gives it')
+        return self.lines.pop(0)
+
+
+def _scim_ask(prompt=''):
+    """input() on the scratch pad - a real question box in the browser."""
+    try:
+        import js
+        answer = js.window.prompt(str(prompt) if prompt else 'Input:')
+    except Exception:
+        raise RuntimeError('input() cannot ask for anything here')
+    if answer is None:
+        raise EOFError('you closed the question box, so there was nothing to read')
+    return str(answer)
+
+
+def _scim_no_input(prompt=''):
+    raise RuntimeError('this problem gives no input, so input() cannot be used - '
+                       'write a function that returns a value instead')
+
+
+def _scim_lines(t):
+    """The input a test provides: a list of lines, or one string with newlines."""
+    v = t.get('input')
+    if v is None:
+        return None
+    if isinstance(v, str):
+        return v.replace('\r\n', '\n').split('\n')
+    return [str(x) for x in v]
+
+
+def _scim_text(s):
+    """Printed output, tidied so that stray spaces and blank lines do not fail
+    an otherwise correct answer."""
+    lines = [ln.rstrip() for ln in str(s).replace('\r\n', '\n').split('\n')]
+    while lines and lines[0] == '':
+        lines.pop(0)
+    while lines and lines[-1] == '':
+        lines.pop()
+    return '\n'.join(lines)
+
+
+def _scim_expected_text(exp):
+    if isinstance(exp, (list, tuple)):
+        return _scim_text('\n'.join(str(x) for x in exp))
+    return _scim_text('' if exp is None else exp)
+
+
+def _scim_is_program(t):
+    """A test with neither "call" nor "expr" runs the whole program and looks at
+    what it printed."""
+    return 'call' not in t and 'expr' not in t
+
+
+# ------------------------------------------------------------- comparing ----
+
 def _scim_plain(v):
     """numpy / pandas values -> ordinary Python, so that a numpy array can be
     compared with the plain JSON list written in the test."""
@@ -168,7 +238,12 @@ def _scim_cmp(got, exp):
 def _scim_label(t):
     if 'expr' in t:
         return t['expr']
-    return '%s(%s)' % (t['call'], ', '.join(repr(a) for a in t.get('args', [])))
+    if 'call' in t:
+        base = '%s(%s)' % (t['call'], ', '.join(repr(a) for a in t.get('args', [])))
+        lines = _scim_lines(t)
+        return base + (' with input ' + ', '.join(lines) if lines else '')
+    lines = _scim_lines(t)
+    return 'your program with input ' + ', '.join(lines) if lines else 'your program'
 
 
 def _scim_why(e):
@@ -203,48 +278,105 @@ def _scim_figure():
         return ''
 
 
-def _scim_run(code, setup, tests_json, limit):
-    """Graded run: the student's code, then every test case."""
-    tests = json.loads(tests_json)
-    ns = {'__name__': '__main__'}
-    if setup:
-        try:
-            _scim_arm(limit)
-            exec(compile(setup, '<setup>', 'exec'), ns)
-        except Exception as e:
-            return json.dumps({'error': 'Course setup failed - %s: %s' % (type(e).__name__, e)})
-        finally:
-            sys.settrace(None)
+# ------------------------------------------------------------- the runs -----
 
+def _scim_program(code, setup, lines, limit):
+    """One whole run of the student's program with its own fresh memory and its
+    own prepared input. Returns (what it printed, error or None)."""
+    ns = {'__name__': '__main__', 'input': _ScimFeed(lines or [])}
     buf = io.StringIO()
     real_stdout = sys.stdout
-    results = []
     sys.stdout = buf
     try:
         _scim_arm(limit)
-        try:
-            exec(compile(code, '<student>', 'exec'), ns)
-        except Exception as e:
-            return json.dumps({'error': _scim_why(e), 'stdout': buf.getvalue()})
-        for t in tests:
-            label = _scim_label(t)
-            _scim_arm(limit)          # re-arm: a raised timeout switches tracing off
-            try:
-                if 'expr' in t:
-                    got = eval(compile(t['expr'], '<student>', 'eval'), ns)
-                else:
-                    fn = ns.get(t['call'])
-                    if not callable(fn):
-                        raise NameError("there is no function called '%s'" % t['call'])
-                    got = fn(*t.get('args', []))
-                results.append({'label': label, 'expected': repr(t.get('expected')),
-                                'got': repr(_scim_plain(got)), 'ok': _scim_cmp(got, t.get('expected'))})
-            except Exception as e:
-                results.append({'label': label, 'expected': repr(t.get('expected')),
-                                'got': '%s: %s' % (type(e).__name__, e), 'ok': False})
+        if setup:
+            exec(compile(setup, '<setup>', 'exec'), ns)
+        exec(compile(code, '<student>', 'exec'), ns)
+        return buf.getvalue(), None
+    except Exception as e:
+        return buf.getvalue(), _scim_why(e)
     finally:
         sys.settrace(None)
         sys.stdout = real_stdout
+
+
+def _scim_run(code, setup, tests_json, limit):
+    """Graded run. Three shapes of test are understood:
+         {"call": "add", "args": [2, 3], "expected": 5}
+         {"expr": "squares", "expected": [1, 4, 9]}
+         {"input": ["5", "7"], "expected": "12"}      <- runs the whole program
+    """
+    tests = json.loads(tests_json)
+    needs_ns = any(not _scim_is_program(t) for t in tests)
+
+    ns = {'__name__': '__main__', 'input': _scim_no_input}
+    start_error = None
+    buf = io.StringIO()
+
+    if needs_ns:
+        real_stdout = sys.stdout
+        sys.stdout = buf
+        try:
+            if setup:
+                try:
+                    _scim_arm(limit)
+                    exec(compile(setup, '<setup>', 'exec'), ns)
+                finally:
+                    sys.settrace(None)
+        except Exception as e:
+            sys.stdout = real_stdout
+            return json.dumps({'error': 'Course setup failed - %s: %s' % (type(e).__name__, e)})
+        try:
+            _scim_arm(limit)
+            exec(compile(code, '<student>', 'exec'), ns)
+        except Exception as e:
+            start_error = _scim_why(e)
+        finally:
+            sys.settrace(None)
+            sys.stdout = real_stdout
+        if start_error and all(not _scim_is_program(t) for t in tests):
+            return json.dumps({'error': start_error, 'stdout': buf.getvalue()})
+
+    results = []
+    for t in tests:
+        label = _scim_label(t)
+        expected = t.get('expected')
+
+        if _scim_is_program(t):
+            printed, err = _scim_program(code, setup, _scim_lines(t), limit)
+            want = _scim_expected_text(expected)
+            if err:
+                results.append({'label': label, 'expected': repr(want), 'got': err, 'ok': False})
+            else:
+                got = _scim_text(printed)
+                results.append({'label': label, 'expected': repr(want),
+                                'got': repr(got), 'ok': got == want})
+            continue
+
+        if start_error:
+            results.append({'label': label, 'expected': repr(expected),
+                            'got': start_error, 'ok': False})
+            continue
+
+        lines = _scim_lines(t)
+        ns['input'] = _ScimFeed(lines) if lines is not None else _scim_no_input
+        _scim_arm(limit)          # re-arm: a raised timeout switches tracing off
+        try:
+            if 'expr' in t:
+                got = eval(compile(t['expr'], '<student>', 'eval'), ns)
+            else:
+                fn = ns.get(t['call'])
+                if not callable(fn):
+                    raise NameError("there is no function called '%s'" % t['call'])
+                got = fn(*t.get('args', []))
+            results.append({'label': label, 'expected': repr(expected),
+                            'got': repr(_scim_plain(got)), 'ok': _scim_cmp(got, expected)})
+        except Exception as e:
+            results.append({'label': label, 'expected': repr(expected),
+                            'got': '%s: %s' % (type(e).__name__, e), 'ok': False})
+        finally:
+            sys.settrace(None)
+
     return json.dumps({'results': results, 'stdout': buf.getvalue()})
 
 
@@ -253,10 +385,9 @@ def _scim_scratch(setup, answer, code, limit):
 
     The problem's setup code and the answer the student is writing in the main
     editor are both run first, so the pad can call the function they just wrote.
-    Then it shows what was printed, the value of the last line, and a chart if
-    one was drawn."""
+    input() here opens a question box in the browser."""
     out = {'stdout': '', 'value': '', 'error': '', 'image': '', 'answer_error': ''}
-    ns = {'__name__': '__main__'}
+    ns = {'__name__': '__main__', 'input': _scim_ask}
     buf = io.StringIO()
     real_stdout = sys.stdout
     sys.stdout = buf

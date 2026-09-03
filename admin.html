@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/styles.css?v=20260903">
 <script>/* pick the theme before anything is painted, so there is no flash */
 try{var t=localStorage.getItem("scim105:theme");
 document.documentElement.setAttribute("data-theme",
@@ -112,13 +112,23 @@ document.documentElement.setAttribute("data-theme",
           value of a numpy array or a pandas Series as a plain JSON list; the checker converts the
           result for you. For a DataFrame, test an expression such as
           <code>df.values.tolist()</code>.</p>
-        <p class="hint" style="margin-top:8px">Each test is one of these two shapes:</p>
+        <p class="hint" style="margin-top:8px">Each test is one of these three shapes:</p>
         <ul class="hint" style="margin:6px 0 0 18px;line-height:1.9">
           <li><b>Calls a function</b> \u2014
               <code>{"call":"add","args":[2,3],"expected":5}</code></li>
           <li><b>Runs any Python expression</b> after the student's code \u2014
               <code>{"expr":"Rectangle(3,4).area()","expected":12}</code></li>
+          <li><b>Runs the whole program</b> and checks what it printed \u2014
+              <code>{"input":["Ann","5"],"expected":["Hello, Ann","10"]}</code></li>
         </ul>
+        <p class="hint" style="margin-top:10px"><b>Problems that use <code>input()</code>.</b>
+          A web page has no keyboard, so <code>input()</code> only works when the test hands it the
+          lines to read. Put them in <code>"input"</code>: a list of strings, one per
+          <code>input()</code> call. Use the third shape above for a whole program, or add
+          <code>"input"</code> to a <code>call</code> test for a function that reads.
+          The wording inside <code>input("\u2026")</code> is <b>ignored</b> \u2014 only what the
+          program <code>print</code>s is compared, and trailing spaces and blank lines are forgiven.
+          On the student's scratch pad <code>input()</code> opens a real question box instead.</p>
         <p class="hint" style="margin-top:10px"><b>No function needed?</b> Leave
           <i>Function / class the tests call</i> empty and use the <code>expr</code> form.
           An expression can simply be the name of a variable the student was asked to build,
@@ -160,7 +170,8 @@ document.documentElement.setAttribute("data-theme",
           <select id="ai-style">
             <option value="func">Write a function</option>
             <option value="expr">No function — build a variable (list comprehension, slicing…)</option>
-            <option value="mix">Mix of both</option>
+            <option value="prog">A whole program that reads input() and prints</option>
+            <option value="mix">Mix of function and variable</option>
           </select></div>
         <div><label class="f">How many problems</label><input type="number" id="ai-count" value="3" min="1" max="8"></div>
         <div><label class="f">Extra instruction (optional)</label><input type="text" id="ai-extra" placeholder="e.g. use temperature data"></div>
@@ -213,7 +224,7 @@ document.documentElement.setAttribute("data-theme",
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/app.js?v=20260903"></script>
 <script>
 (async function () {
   const S = window.SCIM;
@@ -403,7 +414,13 @@ document.documentElement.setAttribute("data-theme",
     if (!Array.isArray(tests)) { S.toast("The tests must be a list [ ... ]", "err"); return null; }
     for (const t of tests) {
       if (!("expected" in t)) { S.toast('Every test needs an "expected" value', "err"); return null; }
-      if (!t.expr && !t.call) { S.toast('Every test needs "call" or "expr"', "err"); return null; }
+      if (!t.expr && !t.call && !("input" in t)) {
+        S.toast('Every test needs "call", "expr", or "input" (to run the whole program)', "err");
+        return null;
+      }
+      if ("input" in t && !Array.isArray(t.input) && typeof t.input !== "string") {
+        S.toast('"input" must be a list of lines, e.g. ["Ann", "5"]', "err"); return null;
+      }
     }
     return tests;
   }
@@ -468,23 +485,27 @@ document.documentElement.setAttribute("data-theme",
 "Write " + n + " problems." + (extra ? " " + extra : "") + "\n\n";
 
     const libRule = {
-      none: "A. Only plain Python - no imports of outside libraries (no numpy, no pandas). " +
-            "Never use input(). Never print the answer.\n",
+      none: "A. Only plain Python - no imports of outside libraries (no numpy, no pandas).\n",
       np:   "A. The problems MAY use numpy and pandas (the problem itself must import them). " +
-            "Nothing else beyond the Python standard library. Never use input(). Never print the answer.\n" +
+            "Nothing else beyond the Python standard library.\n" +
             "A1. A numpy array or a pandas Series in a test is written as a plain JSON list - the checker " +
             "converts it automatically. For a DataFrame use an expression such as " +
             '"df.values.tolist()" or "sorted(df.columns)".\n',
       all:  "A. The problems MAY use numpy, pandas, scipy, matplotlib, sympy and other standard scientific " +
-            "libraries (the problem itself must import them). Never use input(). Never print the answer. " +
+            "libraries (the problem itself must import them). " +
             "Never make a problem whose answer is a picture - a chart cannot be marked automatically.\n" +
             "A1. A numpy array or a pandas Series in a test is written as a plain JSON list - the checker " +
             "converts it automatically. For a DataFrame use an expression such as " +
             '"df.values.tolist()" or "sorted(df.columns)".\n'
     }[libs];
 
+    /* whether the problems should read from input() and print, or return a value */
+    const ioRule = (style === "prog")
+      ? "A2. These problems DO use input() and print() - that is the whole point of them.\n"
+      : "A2. Never use input(). Never print the answer - the code must RETURN it or leave it in a variable.\n";
+
     const common =
-"SHARED RULES\n" + libRule +
+"SHARED RULES\n" + libRule + ioRule +
 "B. Give exactly 4 test cases per problem, including one edge case (empty list, zero, negative, one element...).\n" +
 "C. Work out every expected answer BY HAND and double-check it. The expected value must be exactly what correct code produces.\n" +
 "D. Round any floating point answer (say 'rounded to 2 decimals' in the statement) so the expected value is exact.\n" +
@@ -568,8 +589,43 @@ document.documentElement.setAttribute("data-theme",
 "  }\n" +
 "]\n";
 
+    const progRules =
+"STYLE: A WHOLE PROGRAM THAT READS input()\n" +
+"1. The student writes a short program - no function - that reads its data with input() and prints the answer with print().\n" +
+'2. "entry_name" must be the empty string "".\n' +
+"3. Every test gives the lines the person would type, in order, and what the program must print:\n" +
+'   {"input": ["Ann", "5"], "expected": ["Hello, Ann", "10"]}\n' +
+'   "expected" is a list of printed lines (or one string containing newlines).\n' +
+'4. The wording inside input("...") is IGNORED by the checker, so the student may ask the question any way they like.\n' +
+"   Only what print() writes is compared. Trailing spaces and blank lines are forgiven; everything else must match exactly.\n" +
+"5. Because the printed text must match, say the exact wording in the statement, e.g. \"print <code>Total = 12</code>\".\n" +
+"   Prefer printing bare numbers or one short sentence - do not invent decorative output.\n" +
+"6. starter_code is one or two comment lines, e.g. \"# read the two values with input()\\n# then print the answer\\n\".\n" +
+"7. Every test must supply exactly as many lines as the program calls input() - no more, no less.\n\n";
+
+    const progShape =
+"ANSWER WITH JSON ONLY - a list in exactly this shape, no explanation before or after:\n" +
+"[\n" +
+"  {\n" +
+'    "slug": "' + slugPrefix + 'greet-and-double",\n' +
+'    "title": "Greet and double",\n' +
+'    "statement": "Ask for a name and a number. Print <code>Hello, NAME</code> on the first line, then the number doubled on the second line.",\n' +
+'    "entry_name": "",\n' +
+'    "setup_code": "",\n' +
+'    "starter_code": "# read the name, then the number\\n# then print the two lines\\n",\n' +
+'    "example": "input: Ann, 5  ->  Hello, Ann / 10",\n' +
+'    "tests": [\n' +
+'      {"input": ["Ann", "5"], "expected": ["Hello, Ann", "10"]},\n' +
+'      {"input": ["Bob", "0"], "expected": ["Hello, Bob", "0"]},\n' +
+'      {"input": ["Cy", "-3"], "expected": ["Hello, Cy", "-6"]},\n' +
+'      {"input": ["Dee", "100"], "expected": ["Hello, Dee", "200"]}\n' +
+"    ]\n" +
+"  }\n" +
+"]\n";
+
     let body;
     if (style === "expr")      body = exprRules + exprShape;
+    else if (style === "prog") body = progRules + progShape;
     else if (style === "mix")  body = funcRules + exprRules +
       "Use a mix: about half the problems in each style.\n\n" + funcShape + "\n" + exprShape;
     else                       body = funcRules + funcShape;
@@ -608,7 +664,9 @@ document.documentElement.setAttribute("data-theme",
       if (!Array.isArray(p.tests) || p.tests.length === 0) { errs.push(where + "no tests"); return; }
       for (const t of p.tests) {
         if (!("expected" in t)) { errs.push(where + 'a test has no "expected"'); return; }
-        if (!t.call && !t.expr) { errs.push(where + 'a test has no "call" or "expr"'); return; }
+        if (!t.call && !t.expr && !("input" in t)) {
+          errs.push(where + 'a test has no "call", "expr" or "input"'); return;
+        }
         if (t.call && !p.entry_name) { errs.push(where + 'a test uses "call", so entry_name is required'); return; }
       }
       problems2.push(p);
@@ -639,8 +697,9 @@ document.documentElement.setAttribute("data-theme",
     const rows = aiRows.map(p => ({
       week_no: wk, level: level, level_title: lt, level_subtitle: ls,
       slug: p.slug, title: p.title, statement: p.statement || p.title,
-      example: p.example || (p.tests[0].expr ? p.tests[0].expr : p.entry_name + "(...)") +
-               "  ->  " + JSON.stringify(p.tests[0].expected),
+      example: p.example || ((p.tests[0].expr ? p.tests[0].expr
+                 : (p.entry_name ? p.entry_name + "(...)" : "input " + JSON.stringify(p.tests[0].input || []))) +
+               "  ->  " + JSON.stringify(p.tests[0].expected)),
       entry_name: p.entry_name || "",
       starter_code: p.starter_code ||
         (p.entry_name ? "def " + p.entry_name + "():\n    pass\n"
