@@ -324,3 +324,32 @@ code,pre,.mono,textarea,input,select,
 }
 .CodeMirror-hint{padding:4px 12px;border-radius:7px;color:var(--txt-dim);white-space:pre;cursor:pointer}
 li.CodeMirror-hint-active{background:var(--accent);color:#fff}
+
+/* ---------- student progress: sorting, badges, the grid ---------- */
+.tabs.sub .tab{padding:8px 16px;font-size:14.5px;border-radius:10px}
+table.grid th.sortable{cursor:pointer;user-select:none;white-space:nowrap}
+table.grid th.sortable:hover{color:var(--txt)}
+table.grid th.sortable .arrow{font-size:10px;margin-left:6px;color:var(--accent-bright)}
+table.grid th.sorted{color:var(--txt)}
+table.grid td .sub.mono{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:3px}
+.pctnum{font-size:12.5px;color:var(--muted);margin-top:3px;display:inline-block}
+.pill.warn{background:rgba(254,188,46,.14);color:var(--amber);border:1px solid rgba(254,188,46,.3);
+  cursor:help;max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:inline-block}
+.warntxt{color:var(--amber)}
+
+.heatwrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px}
+table.grid.heat{width:auto;font-size:13px;border-collapse:separate;border-spacing:0}
+table.grid.heat td.sticky{max-width:230px;overflow:hidden;text-overflow:ellipsis}
+table.grid.heat th,table.grid.heat td{padding:7px 8px}
+table.grid.heat th.hcol{text-align:center;font-size:11px;padding:7px 4px;min-width:26px}
+table.grid.heat td.sticky{position:sticky;left:0;background:var(--card);white-space:nowrap;
+  border-right:1px solid var(--border-soft)}
+table.grid.heat tr:hover td.sticky{background:var(--card-2)}
+td.cell{width:22px;min-width:22px;padding:0 !important;border-bottom:1px solid var(--bg)}
+td.cell::after{content:"";display:block;width:16px;height:16px;margin:3px auto;border-radius:4px}
+td.cell.ok::after{background:var(--green)}
+td.cell.try::after{background:var(--amber)}
+td.cell.no::after{background:var(--card-3);border:1px solid var(--border)}
+.key{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-2px;margin-right:4px}
+.key.ok{background:var(--green)} .key.try{background:var(--amber)}
+.key.no{background:var(--card-3);border:1px solid var(--border)}
