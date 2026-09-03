@@ -308,6 +308,13 @@ code,pre,.mono,textarea,input,select,
   font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
 }
 
+/* The first indent line sits at column 0, which by default is only 4px from the
+   line-number divider - close enough that the two read as one border. Push the
+   code away from the divider so that first line clearly belongs to the code. */
+.CodeMirror pre.CodeMirror-line,.CodeMirror pre.CodeMirror-line-like{padding-left:14px}
+.CodeMirror-gutters{border-right-width:0}
+.CodeMirror-linenumber{padding-right:10px}
+
 /* ---------- the suggestion list ---------- */
 .CodeMirror-hints{
   z-index:90; position:absolute; overflow:hidden auto; max-height:16em;
