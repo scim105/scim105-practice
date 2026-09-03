@@ -99,6 +99,37 @@
       .eq("id", ctx.user.id);
   }
 
+  /* ---------------- light / dark ----------------
+     The choice is kept per browser. With nothing chosen we follow whatever
+     the computer is set to. A tiny script in each page's <head> applies it
+     before anything is painted, so the page never flashes the wrong colour. */
+  const THEME_KEY = "scim105:theme";
+  const savedTheme = () => { try { return localStorage.getItem(THEME_KEY) || ""; } catch (e) { return ""; } };
+  const systemTheme = () =>
+    (window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark";
+
+  function applyTheme(name) {
+    document.documentElement.setAttribute("data-theme", name);
+    document.querySelectorAll("[data-theme-toggle]").forEach((b) => {
+      b.textContent = name === "light" ? "\u{1F319}" : "\u2600\uFE0F";
+      b.title = name === "light" ? "Switch to the dark theme" : "Switch to the light theme";
+    });
+    window.dispatchEvent(new CustomEvent("scim-theme", { detail: name }));
+  }
+
+  function initTheme() {
+    applyTheme(savedTheme() || systemTheme());
+    document.querySelectorAll("[data-theme-toggle]").forEach((b) => {
+      b.onclick = () => {
+        const next = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+        try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+        applyTheme(next);
+      };
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initTheme);
+  else initTheme();
+
   function fillHeader(ctx) {
     const av = document.querySelector("[data-avatar]");
     const wh = document.querySelector("[data-who]");
@@ -111,6 +142,8 @@
 
   window.SCIM = {
     cfg: CFG, sb, configured, esc, toast, initials, firstName,
-    signIn, signOut, getSession, recordLogin, fillHeader, domainAllowed
+    signIn, signOut, getSession, recordLogin, fillHeader, domainAllowed,
+    applyTheme, initTheme,
+    isLight: () => document.documentElement.getAttribute("data-theme") === "light"
   };
 })();

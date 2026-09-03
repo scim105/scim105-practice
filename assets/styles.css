@@ -1,5 +1,10 @@
 /* =====================================================================
-   SCIM 105 Practice - shared dark theme
+   SCIM 105 Practice - shared theme
+
+   Two palettes live here. :root is the dark one (the default); everything
+   under :root[data-theme="light"] is the light one. Nothing else in this
+   file names a colour directly, so the whole site flips by changing that
+   one attribute on <html> - which is what the moon/sun button does.
    ===================================================================== */
 :root{
   --bg:#0b0e17; --bg-soft:#0f131f; --header:#10141f;
@@ -10,14 +15,35 @@
   --green:#34d399; --green-soft:rgba(52,211,153,.12);
   --red:#f87171;   --red-soft:rgba(248,113,113,.10);
   --amber:#fbbf24;
+  --glow:#161b2e;                                  /* the soft light behind the page */
+  --border-hi:#33406b; --accent-line:#3b3a7a; --ring:#39415a;
+  --editor:#12141c; --editor-bar:#161a24; --editor-line:#1e2433; --editor-txt:#e8ecf7;
+  --code:#ffd9a0; --code-line:#3b3423; --note-txt:#f0cf95;
+  --shadow:rgba(0,0,0,.5);
   --radius:14px;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
 }
+:root[data-theme="light"]{
+  --bg:#f5f7fb; --bg-soft:#eef1f7; --header:#ffffff;
+  --card:#ffffff; --card-2:#f3f5fa; --card-3:#e8ecf4;
+  --border:#d7dde9; --border-soft:#e6eaf2;
+  --txt:#171d2b; --txt-dim:#3d4658; --muted:#6a7387;
+  --accent:#5b52e8; --accent-soft:rgba(91,82,232,.11); --accent-bright:#4b43cf;
+  --green:#0e9c6e; --green-soft:rgba(14,156,110,.12);
+  --red:#d64545;   --red-soft:rgba(214,69,69,.09);
+  --amber:#b7791f;
+  --glow:#e7ebfa;
+  --border-hi:#b7c0d6; --accent-line:#c2bef8; --ring:#c3cad9;
+  --editor:#ffffff; --editor-bar:#f2f4fa; --editor-line:#e3e8f1; --editor-txt:#171d2b;
+  --code:#9a5300; --code-line:#e7d6b4; --note-txt:#8a6212;
+  --shadow:rgba(23,29,43,.16);
+}
+
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  background:radial-gradient(1200px 600px at 20% -10%,#161b2e 0%,var(--bg) 55%) fixed,var(--bg);
+  background:radial-gradient(1200px 600px at 20% -10%,var(--glow) 0%,var(--bg) 55%) fixed,var(--bg);
   color:var(--txt); font-family:var(--sans); font-size:16px; line-height:1.55;
   -webkit-font-smoothing:antialiased;
 }
@@ -69,7 +95,7 @@ code,pre,textarea,.mono{font-family:var(--mono)}
 .btn.danger{color:var(--red);border-color:rgba(248,113,113,.35)}
 .btn:disabled{opacity:.55;cursor:not-allowed}
 .btn-google{
-  width:100%;background:#fff;color:#1f2430;border:none;border-radius:12px;padding:15px 20px;
+  width:100%;background:#fff;color:#1f2430;border:1px solid var(--border);border-radius:12px;padding:15px 20px;
   font-size:17px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:14px;cursor:pointer;
 }
 .btn-google:hover{background:#f2f3f7}
@@ -95,7 +121,7 @@ code,pre,textarea,.mono{font-family:var(--mono)}
   background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px 24px 24px;
   display:block;color:inherit;transition:.16s ease;position:relative;
 }
-.week-card.open:hover{transform:translateY(-2px);border-color:#33406b;background:var(--card-2)}
+.week-card.open:hover{transform:translateY(-2px);border-color:var(--border-hi);background:var(--card-2)}
 .week-card.soon{opacity:.55;cursor:not-allowed}
 .week-card .row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .week-no{font-family:var(--mono);font-size:13px;letter-spacing:2px;color:var(--accent-bright);text-transform:uppercase}
@@ -119,7 +145,7 @@ code,pre,textarea,.mono{font-family:var(--mono)}
   width:34px;height:34px;border-radius:10px;background:var(--card-3);border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;font-size:14px;flex:none;color:var(--txt-dim);
 }
-.level.unlocked .level-num{background:var(--accent-soft);border-color:#3b3a7a;color:var(--accent-bright)}
+.level.unlocked .level-num{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent-bright)}
 .level-head b{display:block;font-size:16px}
 .level-head span{display:block;font-size:13px;color:var(--muted)}
 .level.locked .level-head b,.level.locked .level-head span{color:var(--muted)}
@@ -129,12 +155,12 @@ code,pre,textarea,.mono{font-family:var(--mono)}
   border:1px solid transparent;font-size:15px;color:var(--txt-dim);
 }
 .pitem:hover{background:var(--card-2)}
-.pitem.active{border-color:#3f4a7d;background:var(--card-2);color:var(--txt)}
+.pitem.active{border-color:var(--accent-line);background:var(--card-2);color:var(--txt)}
 .pitem.locked{cursor:not-allowed;color:var(--muted)}
-.pitem .ring{width:20px;height:20px;border-radius:50%;border:2px solid #39415a;flex:none}
+.pitem .ring{width:20px;height:20px;border-radius:50%;border:2px solid var(--ring);flex:none}
 .pitem.solved .ring{background:var(--green);border-color:var(--green);position:relative}
 .pitem.solved .ring:after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
-  border:solid #0b0e17;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  border:solid var(--bg);border-width:0 2px 2px 0;transform:rotate(45deg)}
 .pitem .lock{margin-left:auto;font-size:13px;opacity:.8}
 .work{padding:30px 34px 90px;max-width:1080px}
 .prompt{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px 28px}
@@ -142,17 +168,17 @@ code,pre,textarea,.mono{font-family:var(--mono)}
   text-transform:uppercase;margin-bottom:10px}
 .prompt h2{margin:0 0 14px;font-size:29px}
 .prompt .statement{color:var(--txt-dim);font-size:16px}
-.prompt .statement code{background:var(--card-3);padding:2px 7px;border-radius:6px;color:#ffd9a0;font-size:14.5px}
+.prompt .statement code{background:var(--card-3);padding:2px 7px;border-radius:6px;color:var(--code);font-size:14.5px}
 .prompt .example{margin-top:14px;font-family:var(--mono);font-size:14.5px;color:var(--muted)}
 
-.editor-shell{margin-top:22px;background:#12141c;border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.editor-bar{display:flex;align-items:center;gap:9px;padding:12px 16px;background:#161a24;border-bottom:1px solid #1e2433}
+.editor-shell{margin-top:22px;background:var(--editor);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.editor-bar{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--editor-bar);border-bottom:1px solid var(--editor-line)}
 .dot{width:12px;height:12px;border-radius:50%}
 .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
 .editor-bar .fname{margin-left:auto;font-family:var(--mono);font-size:13px;color:var(--muted)}
-.CodeMirror{height:330px;font-family:var(--mono);font-size:15px;background:#12141c}
+.CodeMirror{height:330px;font-family:var(--mono);font-size:15px;background:var(--editor)}
 textarea.fallback-editor{
-  width:100%;height:330px;background:#12141c;color:#e8ecf7;border:0;padding:14px 16px;
+  width:100%;height:330px;background:var(--editor);color:var(--editor-txt);border:0;padding:14px 16px;
   font-family:var(--mono);font-size:15px;resize:vertical;outline:none;line-height:1.6;
 }
 .run-row{display:flex;gap:14px;align-items:center;margin-top:20px;flex-wrap:wrap}
@@ -177,14 +203,14 @@ textarea.fallback-editor{
 .tcase .body{font-family:var(--mono);font-size:14.5px}
 .tcase .body .sub{color:var(--muted);margin-top:5px}
 .tcase .body .sub b{color:var(--txt-dim);font-weight:500}
-.stdout{margin-top:14px;background:#12141c;border:1px solid var(--border);border-radius:12px;
+.stdout{margin-top:14px;background:var(--editor);border:1px solid var(--border);border-radius:12px;
   padding:14px 18px;font-family:var(--mono);font-size:14px;color:var(--txt-dim);white-space:pre-wrap}
 
 /* ---------- admin ---------- */
 .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
 .tab{padding:10px 18px;border-radius:11px;border:1px solid var(--border);background:var(--card);
   cursor:pointer;font-size:15px;color:var(--txt-dim)}
-.tab.on{background:var(--accent-soft);border-color:#3b3a7a;color:var(--txt)}
+.tab.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--txt)}
 .panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px}
 .panel h3{margin:0 0 6px;font-size:20px}
 .panel p.hint{color:var(--muted);font-size:14.5px;margin:0 0 22px}
@@ -202,7 +228,7 @@ label.f{display:block;margin:16px 0 6px;font-size:13.5px;color:var(--txt-dim)}
 .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}
 .toast{
   position:fixed;right:22px;bottom:22px;background:var(--card-3);border:1px solid var(--border);
-  border-radius:12px;padding:14px 20px;font-size:14.5px;z-index:99;box-shadow:0 14px 40px rgba(0,0,0,.5);
+  border-radius:12px;padding:14px 20px;font-size:14.5px;z-index:99;box-shadow:0 14px 40px var(--shadow);
 }
 .toast.ok{border-color:rgba(52,211,153,.45)} .toast.err{border-color:rgba(248,113,113,.45)}
 .pill{font-size:12px;padding:3px 10px;border-radius:999px;background:var(--card-3);color:var(--txt-dim)}
@@ -215,20 +241,49 @@ label.f{display:block;margin:16px 0 6px;font-size:13.5px;color:var(--txt-dim)}
   .page{padding:28px 18px 60px}
 }
 
-/* ---------- scratch pad (week page) ---------- */
-.scratch{margin-top:30px;background:var(--card);border:1px solid var(--border);border-radius:16px;
-  padding:4px 24px 24px}
-.scratch>summary{cursor:pointer;list-style:none;padding:18px 0 4px;font-weight:600;font-size:16px;
-  color:var(--txt-dim)}
-.scratch>summary::-webkit-details-marker{display:none}
-.scratch>summary::before{content:"\25B8  ";color:var(--accent-bright)}
-.scratch[open]>summary::before{content:"\25BE  "}
-.scratch>summary:hover{color:var(--txt)}
-.scratch p.hint{color:var(--muted);font-size:14px;line-height:1.75;margin:12px 0 0}
-.scratch p.hint code{background:var(--card-3);padding:1px 6px;border-radius:5px;color:#ffd9a0;font-size:13.5px}
-.scratch .editor-shell{margin-top:16px}
-.scratch .CodeMirror,.scratch textarea.fallback-editor{height:210px}
-.scratch .run-row{margin-top:16px}
-.stdout.value{color:#ffd9a0;border-color:#3b3423}
+/* ---------- scratch pad: a folding panel on the right ---------- */
+.split.pad-open{grid-template-columns:300px minmax(0,1fr) min(440px,34vw)}
+.split:not(.pad-open) > .scratch{display:none}
+
+.scratch{border-left:1px solid var(--border);background:var(--bg-soft)}
+.scratch-inner{position:sticky;top:0;max-height:100vh;overflow:auto;padding:22px 20px 40px}
+.scratch-head{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.scratch-head b{font-size:15.5px}
+.scratch-head .info{
+  width:19px;height:19px;border-radius:50%;border:1px solid var(--border);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--muted);cursor:help;flex:none;
+}
+.scratch-head .info:hover{color:var(--txt);border-color:var(--accent)}
+.scratch-head .x{margin-left:auto;padding:5px 11px;font-size:15px;line-height:1}
+.scratch-line{color:var(--muted);font-size:13px;line-height:1.65;margin:0 0 14px}
+.scratch-line code{background:var(--card-3);padding:1px 6px;border-radius:5px;color:var(--code);font-size:12.5px}
+.scratch .editor-shell{margin-top:0}
+.scratch .CodeMirror,.scratch textarea.fallback-editor{height:190px}
+.scratch .run-row{margin-top:14px;gap:10px}
+.scratch .run-row .status{font-size:13px;flex-basis:100%}
+.scratch .result-head{margin-top:16px;padding:14px 18px}
+.scratch .result-head .msg{font-size:14px;font-weight:500}
+.scratch .stdout{font-size:13px;padding:12px 14px}
+
+.note{margin-top:14px;border:1px solid rgba(254,188,46,.32);background:rgba(254,188,46,.08);
+  border-radius:12px;padding:12px 16px;font-size:13px;color:var(--note-txt);line-height:1.6}
+.stdout.value{color:var(--code);border-color:var(--code-line)}
 .stdout.value::before{content:"value  ";color:var(--muted)}
 .figure{display:block;max-width:100%;margin-top:14px;border-radius:12px;background:#fff;padding:10px}
+
+/* narrow screens: the panel slides over the page instead of taking a column */
+@media(max-width:1180px){
+  .split.pad-open{grid-template-columns:340px minmax(0,1fr)}
+  .split.pad-open > .scratch{
+    position:fixed;top:0;right:0;height:100vh;width:min(430px,94vw);z-index:70;
+    background:var(--bg-soft);box-shadow:-18px 0 50px var(--shadow);
+  }
+}
+@media(max-width:900px){
+  .split.pad-open{grid-template-columns:1fr}
+}
+
+/* ---------- light / dark switch ---------- */
+.theme-btn{padding:8px 13px;font-size:16px;line-height:1.1;min-width:42px}
+.CodeMirror-gutters{border-right-color:var(--editor-line)}
