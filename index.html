@@ -8,6 +8,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/styles.css">
+<script>/* pick the theme before anything is painted, so there is no flash */
+try{var t=localStorage.getItem("scim105:theme");
+document.documentElement.setAttribute("data-theme",
+  t || (window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark"));}catch(e){}</script>
 </head>
 <body>
 
@@ -17,6 +21,7 @@
     <h1 data-course-code>SCIM 105 · Python Practice</h1>
     <p data-course-name>Fundamentals of Scientific Computing</p>
   </div>
+  <div class="topbar-right"><button class="btn small ghost theme-btn" data-theme-toggle title="Switch the theme">☀️</button></div>
   <div class="topbar-right hidden" id="userbox">
     <div class="avatar" data-avatar>?</div>
     <div class="who" data-who></div>
