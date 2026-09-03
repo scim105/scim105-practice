@@ -19,7 +19,7 @@
   --border-hi:#33406b; --accent-line:#3b3a7a; --ring:#39415a;
   --editor:#12141c; --editor-bar:#161a24; --editor-line:#1e2433; --editor-txt:#e8ecf7;
   --code:#ffd9a0; --code-line:#3b3423; --note-txt:#f0cf95;
-  --guide:rgba(232,236,247,.13);                   /* the faint indent lines */
+  --guide:rgba(232,236,247,.22);                   /* the faint indent lines */
   --shadow:rgba(0,0,0,.5);
   --radius:14px;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -38,7 +38,7 @@
   --border-hi:#b7c0d6; --accent-line:#c2bef8; --ring:#c3cad9;
   --editor:#ffffff; --editor-bar:#f2f4fa; --editor-line:#e3e8f1; --editor-txt:#171d2b;
   --code:#9a5300; --code-line:#e7d6b4; --note-txt:#8a6212;
-  --guide:rgba(23,29,43,.16);
+  --guide:rgba(23,29,43,.26);
   --shadow:rgba(23,29,43,.16);
 }
 
