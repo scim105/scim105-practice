@@ -694,8 +694,11 @@ document.documentElement.setAttribute("data-theme",
     const { data: existing } = await S.sb.from("problems").select("sort_order")
       .eq("week_no", wk).eq("level", level);
     let next = (existing || []).reduce((m, r) => Math.max(m, r.sort_order), 0);
+    /* a pasted problem may carry its own heading and points; otherwise the
+       defaults for the chosen level are used */
     const rows = aiRows.map(p => ({
-      week_no: wk, level: level, level_title: lt, level_subtitle: ls,
+      week_no: wk, level: level,
+      level_title: p.level_title || lt, level_subtitle: p.level_subtitle || ls,
       slug: p.slug, title: p.title, statement: p.statement || p.title,
       example: p.example || ((p.tests[0].expr ? p.tests[0].expr
                  : (p.entry_name ? p.entry_name + "(...)" : "input " + JSON.stringify(p.tests[0].input || []))) +
@@ -705,7 +708,7 @@ document.documentElement.setAttribute("data-theme",
         (p.entry_name ? "def " + p.entry_name + "():\n    pass\n"
                       : "# write your answer below\n"),
       setup_code: p.setup_code || null,
-      tests: p.tests, points: { 1: 10, 2: 15, 3: 25 }[level],
+      tests: p.tests, points: parseInt(p.points, 10) || { 1: 10, 2: 15, 3: 25 }[level],
       sort_order: ++next, is_active: true
     }));
     const { error } = await S.sb.from("problems").upsert(rows, { onConflict: "slug" });
