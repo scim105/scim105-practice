@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
-<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/styles.css?v=20260903">
 <script>/* pick the theme before anything is painted, so there is no flash */
 try{var t=localStorage.getItem("scim105:theme");
 document.documentElement.setAttribute("data-theme",
@@ -80,7 +80,7 @@ document.documentElement.setAttribute("data-theme",
       <span class="info" tabindex="0" title="Your own space to experiment: print something, try an idea, look at the data.&#10;&#10;Nothing written here is checked, scored or sent to your teacher - but it is kept on this computer for each problem, so it is still here when you come back.&#10;&#10;The setup code of the problem AND the answer you are writing on the left both run first, so you can call your own function straight away.&#10;&#10;You may import numpy, pandas, scipy, matplotlib.pyplot and other standard scientific libraries. A chart you draw is shown underneath.">i</span>
       <button class="btn small ghost x" id="scratch-close" title="Close the scratch pad">✕</button>
     </div>
-    <p class="scratch-line">Your answer on the left runs first — call it here, e.g. <code>add(2, 3)</code>. Not graded.</p>
+    <p class="scratch-line">Any attempts here are not graded.</p>
 
     <div class="editor-shell">
       <div class="editor-bar">
@@ -309,7 +309,7 @@ def _scim_scratch(setup, answer, code, limit):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
 <script src="assets/config.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/app.js?v=20260903"></script>
 <script>
 (async function () {
   const S = window.SCIM;
@@ -442,9 +442,7 @@ def _scim_scratch(setup, answer, code, limit):
   const scratchOut = document.getElementById("scratch-out");
   const scratchStatusEl = document.getElementById("scratch-status");
   const saySc = (t) => { scratchStatusEl.textContent = t; };
-  const SCRATCH_START =
-    "# Your answer on the left has already run, so you can use it here.\n" +
-    "# Nothing on this pad is graded. Use print(...) to look at a value.\n\n";
+  const SCRATCH_START = "";          /* the pad starts empty */
 
   let scm = null;
   const scratchKey = (p) => "scim105:scratch:" + p.slug;
@@ -482,7 +480,20 @@ def _scim_scratch(setup, answer, code, limit):
   const splitBox = document.querySelector(".split");
   const padToggle = document.getElementById("scratch-toggle");
   const PAD_KEY = "scim105:padopen";
+
+  /* On a narrow screen the pad floats over the page. Tell the stylesheet how
+     tall the header is, so it opens below it and Sign out stays reachable. */
+  function measureHead() {
+    const bar = document.querySelector(".topbar");
+    const strip = document.querySelector(".banner");
+    const h = (bar ? bar.offsetHeight : 0) + (strip ? strip.offsetHeight : 0);
+    document.documentElement.style.setProperty("--head-h", h + "px");
+  }
+  measureHead();
+  window.addEventListener("resize", measureHead);
+
   function showPad(open) {
+    measureHead();
     splitBox.classList.toggle("pad-open", open);
     padToggle.textContent = open ? "\u{1F9EA} Hide scratch pad" : "\u{1F9EA} Scratch pad";
     try { localStorage.setItem(PAD_KEY, open ? "1" : "0"); } catch (e) {}
