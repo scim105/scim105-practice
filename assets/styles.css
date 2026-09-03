@@ -53,6 +53,7 @@ code,pre,textarea,.mono{font-family:var(--mono)}
 
 /* ---------- header ---------- */
 .topbar{
+  position:relative; z-index:80;          /* stays above the scratch drawer */
   background:var(--header); border-bottom:1px solid var(--border);
   padding:18px 28px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
 }
@@ -76,6 +77,7 @@ code,pre,textarea,.mono{font-family:var(--mono)}
 }
 .pts b{font-size:16px}
 .banner{
+  position:relative; z-index:80;
   background:rgba(52,211,153,.07); border-bottom:1px solid var(--border-soft);
   padding:11px 28px; font-size:14px; color:var(--txt-dim);
 }
@@ -275,9 +277,13 @@ label.f{display:block;margin:16px 0 6px;font-size:13.5px;color:var(--txt-dim)}
 /* narrow screens: the panel slides over the page instead of taking a column */
 @media(max-width:1180px){
   .split.pad-open{grid-template-columns:340px minmax(0,1fr)}
+  /* --head-h is the height of the top bar + banner, measured by week.html, so
+     the drawer opens underneath them instead of covering Sign out. */
   .split.pad-open > .scratch{
-    position:fixed;top:0;right:0;height:100vh;width:min(430px,94vw);z-index:70;
-    background:var(--bg-soft);box-shadow:-18px 0 50px var(--shadow);
+    position:fixed; top:var(--head-h,118px); right:0;
+    height:calc(100vh - var(--head-h,118px));
+    width:min(430px,94vw); z-index:70; border-top:1px solid var(--border);
+    background:var(--bg-soft); box-shadow:-18px 0 50px var(--shadow);
   }
 }
 @media(max-width:900px){
@@ -287,3 +293,15 @@ label.f{display:block;margin:16px 0 6px;font-size:13.5px;color:var(--txt-dim)}
 /* ---------- light / dark switch ---------- */
 .theme-btn{padding:8px 13px;font-size:16px;line-height:1.1;min-width:42px}
 .CodeMirror-gutters{border-right-color:var(--editor-line)}
+
+/* ---------- no programming ligatures ----------
+   JetBrains Mono draws >= <= != -> == as single glyphs. First-year students are
+   learning to TYPE those characters, so every place that shows code keeps them
+   as the two separate characters they really are. This block sits last on
+   purpose: the `font: inherit` shorthands above would otherwise reset it. */
+code,pre,.mono,textarea,input,select,
+.CodeMirror,.CodeMirror-line,.CodeMirror-code,.CodeMirror-linenumber,
+.stdout,.tcase .body,.editor-bar .fname,.crumbs,.prompt .example,table.grid td{
+  font-variant-ligatures:none;
+  font-feature-settings:"liga" 0,"calt" 0,"dlig" 0;
+}
