@@ -214,3 +214,21 @@ label.f{display:block;margin:16px 0 6px;font-size:13.5px;color:var(--txt-dim)}
   .work{padding:24px 20px 70px}
   .page{padding:28px 18px 60px}
 }
+
+/* ---------- scratch pad (week page) ---------- */
+.scratch{margin-top:30px;background:var(--card);border:1px solid var(--border);border-radius:16px;
+  padding:4px 24px 24px}
+.scratch>summary{cursor:pointer;list-style:none;padding:18px 0 4px;font-weight:600;font-size:16px;
+  color:var(--txt-dim)}
+.scratch>summary::-webkit-details-marker{display:none}
+.scratch>summary::before{content:"\25B8  ";color:var(--accent-bright)}
+.scratch[open]>summary::before{content:"\25BE  "}
+.scratch>summary:hover{color:var(--txt)}
+.scratch p.hint{color:var(--muted);font-size:14px;line-height:1.75;margin:12px 0 0}
+.scratch p.hint code{background:var(--card-3);padding:1px 6px;border-radius:5px;color:#ffd9a0;font-size:13.5px}
+.scratch .editor-shell{margin-top:16px}
+.scratch .CodeMirror,.scratch textarea.fallback-editor{height:210px}
+.scratch .run-row{margin-top:16px}
+.stdout.value{color:#ffd9a0;border-color:#3b3423}
+.stdout.value::before{content:"value  ";color:var(--muted)}
+.figure{display:block;max-width:100%;margin-top:14px;border-radius:12px;background:#fff;padding:10px}
