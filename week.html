@@ -9,7 +9,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
-<link rel="stylesheet" href="assets/styles.css?v=20260903b">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+<link rel="stylesheet" href="assets/styles.css?v=20260903c">
 <script>/* pick the theme before anything is painted, so there is no flash */
 try{var t=localStorage.getItem("scim105:theme");
 document.documentElement.setAttribute("data-theme",
@@ -439,8 +440,10 @@ def _scim_scratch(setup, answer, code, limit):
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
 <script src="assets/config.js"></script>
-<script src="assets/app.js?v=20260903b"></script>
+<script src="assets/app.js?v=20260903c"></script>
 <script>
 (async function () {
   const S = window.SCIM;
@@ -540,6 +543,89 @@ def _scim_scratch(setup, answer, code, limit):
   }
 
   /* ---------------- editor ---------------- */
+  /* ---------------- editor helpers ----------------
+     Everything both editors share: the suggestion list, the faint indent lines,
+     and the settings they are created with. */
+  const INDENT = 4;
+
+  const PY_WORDS = (
+    "False None True and as assert async await break class continue def del elif else except " +
+    "finally for from global if import in is lambda nonlocal not or pass raise return try while " +
+    "with yield " +
+    "abs all any bin bool chr dict divmod enumerate eval filter float format frozenset getattr " +
+    "hasattr hex id input int isinstance issubclass len list map max min next object oct ord pow " +
+    "print range repr reversed round set setattr sorted str sum tuple type zip " +
+    "append count endswith extend find index insert isalpha isdigit items join keys lower pop " +
+    "remove replace reverse sort split startswith strip title upper values " +
+    "math random statistics numpy pandas self"
+  ).split(" ");
+
+  /* Suggestions = Python's own words + every name already written on the page. */
+  if (window.CodeMirror && CodeMirror.registerHelper) {
+    CodeMirror.registerHelper("hint", "scim", function (cm) {
+      const cur = cm.getCursor();
+      const line = cm.getLine(cur.line);
+      let start = cur.ch;
+      while (start && /[\w$]/.test(line.charAt(start - 1))) start--;
+      const typed = line.slice(start, cur.ch);
+      if (!typed) return null;
+
+      const seen = Object.create(null);
+      PY_WORDS.forEach(w => { seen[w] = true; });
+      const words = cm.getValue().match(/[A-Za-z_][A-Za-z0-9_]*/g) || [];
+      words.forEach(w => { if (w !== typed) seen[w] = true; });
+
+      const lower = typed.toLowerCase();
+      const list = Object.keys(seen)
+        .filter(w => w.length > typed.length && w.toLowerCase().indexOf(lower) === 0)
+        .sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1))
+        .slice(0, 20);
+      if (!list.length) return null;
+      return { list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, cur.ch) };
+    });
+  }
+
+  /* A faint vertical line at the start of each level of indentation. The font is
+     monospace, so one character is exactly 1ch and the lines land on the columns. */
+  function drawIndentGuides(cm, line, elt) {
+    const spaces = /^ */.exec(line.text)[0].length;
+    const levels = Math.floor(spaces / INDENT);
+    if (!levels) { elt.style.backgroundImage = ""; return; }
+    elt.style.backgroundImage =
+      "repeating-linear-gradient(to right, var(--guide) 0 1px, transparent 1px " + INDENT + "ch)";
+    elt.style.backgroundSize = (levels * INDENT) + "ch 100%";
+    elt.style.backgroundRepeat = "no-repeat";
+    elt.style.backgroundOrigin = "content-box";
+  }
+
+  function editorOptions() {
+    return {
+      mode: "python", theme: cmTheme(), lineNumbers: true,
+      indentUnit: INDENT, tabSize: INDENT, indentWithTabs: false, lineWrapping: true,
+      autoCloseBrackets: !!(window.CodeMirror && CodeMirror.defaults.autoCloseBrackets !== undefined),
+      extraKeys: {
+        Tab: (c) => c.replaceSelection("    "),
+        "Ctrl-Space": (c) => { if (c.showHint) c.showHint({ hint: CodeMirror.hint.scim }); }
+      }
+    };
+  }
+
+  /* Suggest as they type, but never get in the way: only after two letters, and
+     never while they are in the middle of a word they have already finished. */
+  function attachEditorHelpers(editor) {
+    editor.on("renderLine", drawIndentGuides);
+    editor.on("inputRead", function (cm, change) {
+      if (!cm.showHint || !CodeMirror.hint || !CodeMirror.hint.scim) return;
+      if (change.origin !== "+input" || change.text.length !== 1) return;
+      if (!/[A-Za-z_]/.test(change.text[0])) return;
+      const cur = cm.getCursor();
+      const before = cm.getLine(cur.line).slice(0, cur.ch);
+      if (!/[A-Za-z_][A-Za-z0-9_]$/.test(before)) return;      // wait for the second letter
+      cm.showHint({ hint: CodeMirror.hint.scim, completeSingle: false });
+    });
+    editor.refresh();
+  }
+
   /* CodeMirror ships a dark and a light theme; follow whichever the page is in */
   const cmTheme = () => (S.isLight && S.isLight() ? "default" : "material-darker");
   window.addEventListener("scim-theme", () => {
@@ -550,11 +636,8 @@ def _scim_scratch(setup, answer, code, limit):
   let cm = null;
   const textarea = document.getElementById("code");
   if (window.CodeMirror) {
-    cm = CodeMirror.fromTextArea(textarea, {
-      mode: "python", theme: cmTheme(), lineNumbers: true,
-      indentUnit: 4, tabSize: 4, indentWithTabs: false, lineWrapping: true,
-      extraKeys: { Tab: (c) => c.replaceSelection("    ") }
-    });
+    cm = CodeMirror.fromTextArea(textarea, editorOptions());
+    attachEditorHelpers(cm);
   }
   const getCode = () => (cm ? cm.getValue() : textarea.value);
   const setCode = (v) => { cm ? cm.setValue(v) : (textarea.value = v); };
@@ -599,11 +682,8 @@ def _scim_scratch(setup, answer, code, limit):
   /* CodeMirror measures badly in a hidden column, so build it when it opens */
   function buildScratchEditor() {
     if (scm || !window.CodeMirror) return;
-    scm = CodeMirror.fromTextArea(scratchArea, {
-      mode: "python", theme: cmTheme(), lineNumbers: true,
-      indentUnit: 4, tabSize: 4, indentWithTabs: false, lineWrapping: true,
-      extraKeys: { Tab: (c) => c.replaceSelection("    ") }
-    });
+    scm = CodeMirror.fromTextArea(scratchArea, editorOptions());
+    attachEditorHelpers(scm);
     scm.on("change", onScratchEdit);
   }
 
