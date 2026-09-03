@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
-<link rel="stylesheet" href="assets/styles.css?v=20260903c">
+<link rel="stylesheet" href="assets/styles.css?v=20260903d">
 <script>/* pick the theme before anything is painted, so there is no flash */
 try{var t=localStorage.getItem("scim105:theme");
 document.documentElement.setAttribute("data-theme",
@@ -443,7 +443,7 @@ def _scim_scratch(setup, answer, code, limit):
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
 <script src="assets/config.js"></script>
-<script src="assets/app.js?v=20260903c"></script>
+<script src="assets/app.js?v=20260903d"></script>
 <script>
 (async function () {
   const S = window.SCIM;
@@ -623,6 +623,10 @@ def _scim_scratch(setup, answer, code, limit):
       if (!/[A-Za-z_][A-Za-z0-9_]$/.test(before)) return;      // wait for the second letter
       cm.showHint({ hint: CodeMirror.hint.scim, completeSingle: false });
     });
+    /* the text already on screen was rendered before the handler existed, so
+       hand it back to CodeMirror once to make it draw those lines again */
+    const text = editor.getValue();
+    if (text) { editor.setValue(text); editor.clearHistory(); }
     editor.refresh();
   }
 
