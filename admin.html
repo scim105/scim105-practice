@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css?v=20260903g">
+<link rel="stylesheet" href="assets/styles.css?v=20260903h">
 <script>/* pick the theme before anything is painted, so there is no flash */
 try{var t=localStorage.getItem("scim105:theme");
 document.documentElement.setAttribute("data-theme",
@@ -299,7 +299,7 @@ document.documentElement.setAttribute("data-theme",
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
-<script src="assets/app.js?v=20260903g"></script>
+<script src="assets/app.js?v=20260903h"></script>
 <script>
 (async function () {
   const S = window.SCIM;
@@ -1210,6 +1210,7 @@ document.documentElement.setAttribute("data-theme",
       " problem(s) in this card" + (scope.length ? " · a full score here is " +
       scope.reduce((s, p) => s + p.points, 0) + " points" : "");
     const cols = [
+      { label: "No." },                       // just the position in the list as it stands
       { key: "sid", label: "ID" },
       { key: "name", label: "Student" }, { key: "email", label: "E-mail" },
       { key: "lastLogin", label: "Last login" }, { key: "logins", label: "Logins" },
@@ -1218,8 +1219,9 @@ document.documentElement.setAttribute("data-theme",
       { key: "risk", label: "Needs attention" }, { label: "" }
     ];
     $("st-table").innerHTML = headRow(cols, stSort.people) +
-      (rows.length ? rows.map(r =>
-        "<tr><td class='mono'>" + S.esc(r.sid) + "</td>" +
+      (rows.length ? rows.map((r, i) =>
+        "<tr><td class='rownum'>" + (i + 1) + "</td>" +
+        "<td class='mono'>" + S.esc(r.sid) + "</td>" +
         "<td>" + S.esc(r.name) + (r.admin ? ' <span class="pill">admin</span>' : "") +
         "</td><td>" + S.esc(r.email) +
         "</td><td>" + fmt(r.lastLogin) + "</td><td>" + r.logins +
@@ -1231,7 +1233,7 @@ document.documentElement.setAttribute("data-theme",
         "</td><td>" + (r.id
           ? '<button class="btn small st-view" data-id="' + r.id + '">Details</button>' : "") +
         "</td></tr>").join("")
-        : '<tr><td colspan="11">Nobody matches what you are looking for.</td></tr>');
+        : '<tr><td colspan="12">Nobody matches what you are looking for.</td></tr>');
     wireHead($("st-table"), stSort.people, renderStudents);
     $("st-table").querySelectorAll(".st-view").forEach(b =>
       b.onclick = () => showStudent(b.dataset.id));
@@ -1275,7 +1277,8 @@ document.documentElement.setAttribute("data-theme",
       tried[k] = (tried[k] || 0) + 1;
     });
 
-    const head = '<tr><th class="sortable' + (stSort.grid.key === "name" ? " sorted" : "") +
+    const head = '<tr><th class="num">No.</th>' +
+      '<th class="name sortable' + (stSort.grid.key === "name" ? " sorted" : "") +
       '" data-key="name">Student<span class="arrow">' +
       (stSort.grid.key === "name" ? (stSort.grid.dir > 0 ? "▲" : "▼") : "") + "</span></th>" +
       '<th class="sortable' + (stSort.grid.key === "solved" ? " sorted" : "") +
@@ -1284,8 +1287,9 @@ document.documentElement.setAttribute("data-theme",
       scope.map((p, i) => '<th class="hcol" title="' + S.esc(p.title) + '">' + (i + 1) + "</th>").join("") +
       "</tr>";
 
-    $("hm-table").innerHTML = head + (rows.length ? rows.map(r =>
-      '<tr><td class="sticky"><span class="mono" style="color:var(--muted)">' + S.esc(r.sid) +
+    $("hm-table").innerHTML = head + (rows.length ? rows.map((r, i) =>
+      '<tr><td class="num">' + (i + 1) + '</td>' +
+      '<td class="name"><span class="mono" style="color:var(--muted)">' + S.esc(r.sid) +
       "</span> " + S.esc(r.name) + "</td><td>" + r.solved + " / " + r.total + "</td>" +
       scope.map(p => {
         const n = tried[r.id + "|" + p.slug] || 0;
@@ -1293,7 +1297,7 @@ document.documentElement.setAttribute("data-theme",
         return '<td class="cell ' + cls + '" title="' + S.esc(p.title) + " — " +
                (n ? n + " attempt(s)" : "not started") + '"></td>';
       }).join("") + "</tr>").join("")
-      : '<tr><td colspan="2">Nobody matches what you are looking for.</td></tr>');
+      : '<tr><td colspan="3">Nobody matches what you are looking for.</td></tr>');
 
     wireHead($("hm-table"), stSort.grid, renderStudents);
     $("hm-legend").innerHTML = scope.map((p, i) =>
@@ -1388,17 +1392,17 @@ document.documentElement.setAttribute("data-theme",
       const tried = {};
       attempts.forEach(a => { const k = a.user_id + "|" + a.problem_id; tried[k] = (tried[k] || 0) + 1; });
       download("scim105_grid_" + card + ".csv",
-        [["student_id", "student", "email", "solved", "of"].concat(scope.map(p => p.title))].concat(
-          rows.map(r => [r.sid, r.name, r.email, r.solved, r.total].concat(
+        [["no", "student_id", "student", "email", "solved", "of"].concat(scope.map(p => p.title))].concat(
+          rows.map((r, i) => [i + 1, r.sid, r.name, r.email, r.solved, r.total].concat(
             scope.map(p => r.solvedSet.has(p.slug) ? "solved"
               : (tried[r.id + "|" + p.slug] ? "tried x" + tried[r.id + "|" + p.slug] : ""))))));
       return;
     }
     const rows = studentRows();
     download("scim105_students_" + card + ".csv",
-      [["student_id", "name", "email", "last_login", "days_since_login", "logins", "attempts",
+      [["no", "student_id", "name", "email", "last_login", "days_since_login", "logins", "attempts",
         "solved", "of", "percent", "points", "needs_attention"]].concat(
-        rows.map(r => [r.sid, r.name, r.email, fmt(r.lastLogin), r.days === null ? "" : r.days,
+        rows.map((r, i) => [i + 1, r.sid, r.name, r.email, fmt(r.lastLogin), r.days === null ? "" : r.days,
                        r.logins, r.attempts, r.solved, r.total, r.pct, r.points,
                        r.risk.join("; ")])));
   };
