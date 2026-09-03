@@ -42,15 +42,19 @@
     <!-- ============================ WEEKS ============================ -->
     <section class="panel tabpage" id="page-weeks">
       <h3>Weekly topics (the cards on the main page)</h3>
-      <p class="hint">Change the wording, tick <b>Open</b> to let students in, then press <b>Save</b> on that row.
-         A week only becomes clickable when it is Open <i>and</i> has at least one problem.</p>
+      <p class="hint">Change the number or the wording, tick <b>Open</b> to let students in, then press <b>Save</b> on that row.
+         A week only becomes clickable when it is Open <i>and</i> has at least one problem.<br>
+         <b>The same week number may be used more than once</b> — make two cards called
+         “Week 3” with different titles to split one week into separate topics.</p>
       <table class="grid" id="weeks-table"></table>
 
       <h3 style="margin-top:34px">Add a new week</h3>
+      <p class="hint">You may repeat a number that already exists (e.g. a second <b>Week 3</b>
+         for a different topic). Give it a different title so you can tell them apart.</p>
       <div class="row">
-        <div><label class="f">Week number</label><input type="number" id="nw-no" min="1" value="16"></div>
-        <div><label class="f">Title</label><input type="text" id="nw-title" placeholder="e.g. Recursion"></div>
-        <div><label class="f">Subtitle</label><input type="text" id="nw-sub" placeholder="e.g. Functions that call themselves"></div>
+        <div><label class="f">Week number (may repeat)</label><input type="number" id="nw-no" min="1" value="16"></div>
+        <div><label class="f">Title</label><input type="text" id="nw-title" placeholder="e.g. List comprehension"></div>
+        <div><label class="f">Subtitle</label><input type="text" id="nw-sub" placeholder="e.g. Building lists in one line"></div>
       </div>
       <button class="btn primary" style="margin-top:18px" id="nw-add">Add week</button>
     </section>
@@ -78,7 +82,8 @@
           <div><label class="f">Level (1, 2 or 3)</label><input type="number" id="f-level" min="1" max="3"></div>
           <div><label class="f">Points</label><input type="number" id="f-points" min="0"></div>
           <div><label class="f">Order inside the level</label><input type="number" id="f-order" min="1"></div>
-          <div><label class="f">Function / class the tests call</label><input type="text" id="f-entry"></div>
+          <div><label class="f">Function / class the tests call <i>(leave empty if none)</i></label>
+            <input type="text" id="f-entry" placeholder="empty = no function needed"></div>
           <div><label class="f">Level heading</label><input type="text" id="f-ltitle"></div>
           <div><label class="f">Level sub-heading</label><input type="text" id="f-lsub"></div>
           <div><label class="f">Shown to students?</label>
@@ -90,13 +95,37 @@
         <textarea id="f-example" rows="1"></textarea>
         <label class="f">Starter code the student sees</label>
         <textarea id="f-starter" rows="6"></textarea>
-        <label class="f">Setup code (optional — runs before the student's code, e.g. to create a data file)</label>
+        <label class="f">Setup code (optional — runs before the student's code, e.g. to create a data file
+          or to define the data the question talks about)</label>
         <textarea id="f-setup" rows="4"></textarea>
         <label class="f">Test cases (JSON list)</label>
         <textarea id="f-tests" rows="8"></textarea>
-        <p class="hint" style="margin-top:8px">Each test is either
-          <code>{"call":"add","args":[2,3],"expected":5}</code> or
-          <code>{"expr":"Rectangle(3,4).area()","expected":12}</code>.</p>
+        <p class="hint" style="margin-top:8px"><b>Libraries.</b> A problem may
+          <code>import numpy as np</code>, <code>pandas as pd</code>, <code>scipy</code>,
+          <code>matplotlib</code>, <code>sympy</code> and the rest of the standard scientific set —
+          the browser fetches whatever the code imports the first time it is used. Write the expected
+          value of a numpy array or a pandas Series as a plain JSON list; the checker converts the
+          result for you. For a DataFrame, test an expression such as
+          <code>df.values.tolist()</code>.</p>
+        <p class="hint" style="margin-top:8px">Each test is one of these two shapes:</p>
+        <ul class="hint" style="margin:6px 0 0 18px;line-height:1.9">
+          <li><b>Calls a function</b> \u2014
+              <code>{"call":"add","args":[2,3],"expected":5}</code></li>
+          <li><b>Runs any Python expression</b> after the student's code \u2014
+              <code>{"expr":"Rectangle(3,4).area()","expected":12}</code></li>
+        </ul>
+        <p class="hint" style="margin-top:10px"><b>No function needed?</b> Leave
+          <i>Function / class the tests call</i> empty and use the <code>expr</code> form.
+          An expression can simply be the name of a variable the student was asked to build,
+          which is how you set list-comprehension or slicing questions:</p>
+        <ul class="hint" style="margin:6px 0 0 18px;line-height:1.9">
+          <li>Question: \u201cBuild <code>squares</code> \u2014 the squares of 1\u20135 \u2014 with one list comprehension.\u201d<br>
+              Tests: <code>[{"expr":"squares","expected":[1,4,9,16,25]},
+              {"expr":"len(squares)","expected":5}]</code></li>
+          <li>Question: \u201cSet <code>middle</code> to the 3rd\u20135th items of <code>data</code>.\u201d<br>
+              Setup code: <code>data = [10, 20, 30, 40, 50, 60]</code> \u00b7
+              Tests: <code>[{"expr":"middle","expected":[30,40,50]}]</code></li>
+        </ul>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
           <button class="btn primary" id="f-save">Save problem</button>
           <button class="btn" id="f-check">Check the test JSON</button>
@@ -116,6 +145,18 @@
         <div><label class="f">Week</label><select id="ai-week"></select></div>
         <div><label class="f">Level</label>
           <select id="ai-level"><option value="1">1 · First Steps</option><option value="2">2 · A Bit More</option><option value="3">3 · Challenge</option></select></div>
+        <div><label class="f">Libraries the problems may use</label>
+          <select id="ai-libs">
+            <option value="none">Plain Python only</option>
+            <option value="np">numpy and pandas</option>
+            <option value="all">Any scientific library (numpy, pandas, scipy, matplotlib…)</option>
+          </select></div>
+        <div><label class="f">Problem style</label>
+          <select id="ai-style">
+            <option value="func">Write a function</option>
+            <option value="expr">No function — build a variable (list comprehension, slicing…)</option>
+            <option value="mix">Mix of both</option>
+          </select></div>
         <div><label class="f">How many problems</label><input type="number" id="ai-count" value="3" min="1" max="8"></div>
         <div><label class="f">Extra instruction (optional)</label><input type="text" id="ai-extra" placeholder="e.g. use temperature data"></div>
       </div>
@@ -194,14 +235,46 @@
 
   /* ================= WEEKS ================= */
   let weeks = [];
+
+  /* The number the students see. `week_no` stays as the hidden unique row key
+     that every problem is linked to; `display_no` is what goes on the card and
+     MAY be repeated, so one week number can hold several separate topics. */
+  const disp = (w) => (w && w.display_no != null ? w.display_no : (w ? w.week_no : ""));
+  const weekLabel = (w) => "Week " + disp(w) + " · " + w.title;
+  const byInternal = (no) => weeks.find(x => x.week_no === no);
+  const weekNoLabel = (no) => {
+    const w = byInternal(no);
+    return w ? disp(w) : (no === null || no === undefined ? "\u2014" : no);
+  };
+  /* Slugs are unique across the whole course, so when two cards share the same
+     week number the second one gets its title mixed into the prefix. */
+  const slugPrefixFor = (internalNo) => {
+    const w = byInternal(internalNo);
+    if (!w) return "w" + String(internalNo).padStart(2, "0") + "-";
+    const base = "w" + String(disp(w)).padStart(2, "0") + "-";
+    const shared = weeks.filter(x => disp(x) === disp(w)).length > 1;
+    if (!shared) return base;
+    const words = (w.title || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim().split(/\s+/);
+    let t = "";
+    for (const word of words) {
+      if (!word) continue;
+      if (t && (t + "-" + word).length > 22) break;
+      t = t ? t + "-" + word : word;
+    }
+    return base + (t ? t.slice(0, 24) + "-" : "t" + w.id + "-");
+  };
+  const needsUpgrade = (error) => !!error && /display_no/i.test(error.message || "");
+  const upgradeMsg = "Please run sql/04_allow_duplicate_week_numbers.sql in Supabase first.";
+
   async function loadWeeks() {
     const { data } = await S.sb.from("weeks").select("*").order("sort_order");
-    weeks = data || [];
+    weeks = (data || []).slice().sort((a, b) =>
+      (disp(a) - disp(b)) || (a.sort_order - b.sort_order) || (a.id - b.id));
     $("weeks-table").innerHTML =
-      "<tr><th>No.</th><th>Title</th><th>Subtitle</th><th>Open</th><th></th></tr>" +
+      "<tr><th style='width:96px'>No.</th><th>Title</th><th>Subtitle</th><th>Open</th><th></th></tr>" +
       weeks.map(w =>
         '<tr data-id="' + w.id + '">' +
-        "<td>" + w.week_no + "</td>" +
+        '<td><input type="number" min="1" class="w-no" style="width:76px" value="' + disp(w) + '"></td>' +
         '<td><input type="text" class="w-title" value="' + S.esc(w.title) + '"></td>' +
         '<td><input type="text" class="w-sub" value="' + S.esc(w.subtitle || "") + '"></td>' +
         '<td style="text-align:center"><input type="checkbox" class="w-open"' + (w.is_open ? " checked" : "") + "></td>" +
@@ -211,11 +284,15 @@
     $("weeks-table").querySelectorAll("tr[data-id]").forEach(tr => {
       const id = Number(tr.dataset.id);
       tr.querySelector(".w-save").onclick = async () => {
+        const n = parseInt(tr.querySelector(".w-no").value, 10);
+        if (!n || n < 1) { S.toast("Please give a week number", "err"); return; }
         const { error } = await S.sb.from("weeks").update({
+          display_no: n, sort_order: n,
           title: tr.querySelector(".w-title").value.trim(),
           subtitle: tr.querySelector(".w-sub").value.trim(),
           is_open: tr.querySelector(".w-open").checked
         }).eq("id", id);
+        if (needsUpgrade(error)) { S.toast(upgradeMsg, "err"); return; }
         S.toast(error ? "Error: " + error.message : "Saved ✓", error ? "err" : "ok");
         if (!error) loadWeeks();
       };
@@ -231,18 +308,31 @@
 
   $("nw-add").onclick = async () => {
     const no = parseInt($("nw-no").value, 10);
-    if (!no) { S.toast("Please give a week number", "err"); return; }
+    if (!no || no < 1) { S.toast("Please give a week number", "err"); return; }
+
+    /* `week_no` must still be unique, so when the number that was typed is
+       already taken we quietly park this row on a spare high number.
+       The card itself still shows the number that was typed (display_no). */
+    const used = new Set(weeks.map(w => w.week_no));
+    let internal = no;
+    if (used.has(internal)) {
+      internal = Math.max.apply(null, [100].concat(weeks.map(w => w.week_no))) + 1;
+      while (used.has(internal)) internal++;
+    }
+
     const { error } = await S.sb.from("weeks").insert({
-      week_no: no, title: $("nw-title").value.trim() || ("Week " + no),
+      week_no: internal, display_no: no,
+      title: $("nw-title").value.trim() || ("Week " + no),
       subtitle: $("nw-sub").value.trim(), sort_order: no, is_open: false
     });
+    if (needsUpgrade(error)) { S.toast(upgradeMsg, "err"); return; }
     S.toast(error ? "Error: " + error.message : "Week added ✓", error ? "err" : "ok");
     if (!error) { $("nw-title").value = ""; $("nw-sub").value = ""; loadWeeks(); }
   };
 
   function fillWeekSelectors() {
     const options = weeks.map(w =>
-      '<option value="' + w.week_no + '">Week ' + w.week_no + " · " + S.esc(w.title) + "</option>").join("");
+      '<option value="' + w.week_no + '">' + S.esc(weekLabel(w)) + "</option>").join("");
     ["pb-week", "ai-week"].forEach(id => {
       const keep = $(id).value;
       $(id).innerHTML = options;
@@ -261,7 +351,8 @@
       "<tr><th>Lv</th><th>#</th><th>Title</th><th>Function</th><th>Tests</th><th>Pts</th><th>Shown</th><th></th></tr>" +
       (problems.length ? problems.map(p =>
         "<tr><td>" + p.level + "</td><td>" + p.sort_order + "</td><td>" + S.esc(p.title) + "</td>" +
-        "<td class='mono'>" + S.esc(p.entry_name) + "</td><td>" + (p.tests || []).length + "</td>" +
+        "<td class='mono'>" + (p.entry_name ? S.esc(p.entry_name)
+          : "<span class='pill'>no function</span>") + "</td><td>" + (p.tests || []).length + "</td>" +
         "<td>" + p.points + "</td><td>" + (p.is_active
           ? '<span class="pill on">yes</span>' : '<span class="pill">hidden</span>') + "</td>" +
         '<td><button class="btn small pb-edit" data-id="' + p.id + '">Edit</button></td></tr>').join("")
@@ -278,7 +369,7 @@
     const wk = parseInt($("pb-week").value, 10);
     const sample = problems.length ? problems[problems.length - 1] : null;
     const v = p || {
-      title: "", slug: "w" + String(wk).padStart(2, "0") + "-", level: 1, points: 10,
+      title: "", slug: slugPrefixFor(wk), level: 1, points: 10,
       sort_order: problems.length + 1, entry_name: "",
       level_title: sample ? sample.level_title : "First Steps",
       level_subtitle: sample ? sample.level_subtitle : "",
@@ -332,8 +423,11 @@
       sort_order: parseInt($("f-order").value, 10) || 1,
       is_active: $("f-active").value === "true"
     };
-    if (!row.slug || !row.title || !row.entry_name) {
-      S.toast("Title, slug and function name are all required", "err"); return;
+    if (!row.slug || !row.title) {
+      S.toast("Title and slug are both required", "err"); return;
+    }
+    if (!row.entry_name && tests.some(t => t.call && !t.expr)) {
+      S.toast('A test uses "call", so the function name must be filled in', "err"); return;
     }
     const { error } = editingId
       ? await S.sb.from("problems").update(row).eq("id", editingId)
@@ -352,27 +446,68 @@
   /* ================= AI PROMPT ================= */
   function buildPrompt() {
     const wk = parseInt($("ai-week").value, 10);
-    const w = weeks.find(x => x.week_no === wk) || { title: "", subtitle: "" };
+    const w = weeks.find(x => x.week_no === wk) || { title: "", subtitle: "", week_no: wk };
     const level = $("ai-level").value;
+    const style = $("ai-style").value;
+    const libs = $("ai-libs").value;
     const n = $("ai-count").value;
     const extra = $("ai-extra").value.trim();
     const levelWord = { "1": "very easy warm-up", "2": "moderate", "3": "challenging" }[level];
-    const slugPrefix = "w" + String(wk).padStart(2, "0") + "-";
-    $("ai-prompt").value =
-"You are helping me write Python practice problems for SCIM 105 " +
-"(Fundamentals of Scientific Computing), a first-year university course.\n\n" +
-"Week " + wk + " topic: " + w.title + " — " + (w.subtitle || "") + "\n" +
+    const slugPrefix = slugPrefixFor(wk);
+
+    const head =
+"You are helping me write Python practice problems for " + S.cfg.COURSE_CODE + " " +
+"(" + S.cfg.COURSE_NAME + "), a first-year university course.\n\n" +
+"Week " + disp(w) + " topic: " + w.title + " - " + (w.subtitle || "") + "\n" +
 "Difficulty: " + levelWord + " (level " + level + " of 3).\n" +
-"Write " + n + " problems." + (extra ? " " + extra : "") + "\n\n" +
-"RULES\n" +
-"1. Each problem must be solved by ONE Python function (or one class) that RETURNS a value. Never use input(). Never print the answer.\n" +
-"2. Only plain Python - no imports of outside libraries (no numpy, no pandas).\n" +
-"3. Give exactly 4 test cases per problem, including one edge case (empty list, zero, negative...).\n" +
-"4. Work out every expected answer by hand and double-check it. The expected value must be exactly what the correct function returns.\n" +
-"5. Round any floating point answer inside the function (say 'rounded to 2 decimals') so the expected value is exact.\n" +
-"6. slug must start with \"" + slugPrefix + "\" and use only lowercase letters, numbers and hyphens.\n" +
-"7. starter_code must define the function with the correct name and end with `pass`, plus one short comment hint.\n" +
-"8. statement may use simple HTML like <code>...</code>. Keep the English simple - many students are not native speakers.\n\n" +
+"Write " + n + " problems." + (extra ? " " + extra : "") + "\n\n";
+
+    const libRule = {
+      none: "A. Only plain Python - no imports of outside libraries (no numpy, no pandas). " +
+            "Never use input(). Never print the answer.\n",
+      np:   "A. The problems MAY use numpy and pandas (the problem itself must import them). " +
+            "Nothing else beyond the Python standard library. Never use input(). Never print the answer.\n" +
+            "A1. A numpy array or a pandas Series in a test is written as a plain JSON list - the checker " +
+            "converts it automatically. For a DataFrame use an expression such as " +
+            '"df.values.tolist()" or "sorted(df.columns)".\n',
+      all:  "A. The problems MAY use numpy, pandas, scipy, matplotlib, sympy and other standard scientific " +
+            "libraries (the problem itself must import them). Never use input(). Never print the answer. " +
+            "Never make a problem whose answer is a picture - a chart cannot be marked automatically.\n" +
+            "A1. A numpy array or a pandas Series in a test is written as a plain JSON list - the checker " +
+            "converts it automatically. For a DataFrame use an expression such as " +
+            '"df.values.tolist()" or "sorted(df.columns)".\n'
+    }[libs];
+
+    const common =
+"SHARED RULES\n" + libRule +
+"B. Give exactly 4 test cases per problem, including one edge case (empty list, zero, negative, one element...).\n" +
+"C. Work out every expected answer BY HAND and double-check it. The expected value must be exactly what correct code produces.\n" +
+"D. Round any floating point answer (say 'rounded to 2 decimals' in the statement) so the expected value is exact.\n" +
+'E. Expected values must be plain JSON: numbers, strings, true/false, null, lists, objects. A Python tuple must be written as a JSON list.\n' +
+"F. slug must start with \"" + slugPrefix + "\" and use only lowercase letters, numbers and hyphens.\n" +
+"G. statement may use simple HTML like <code>...</code>. Keep the English simple - many students are not native speakers.\n\n";
+
+    const funcRules =
+"STYLE: FUNCTION\n" +
+"1. Each problem is solved by ONE Python function (or one class) that RETURNS a value.\n" +
+'2. Every test uses the "call" form: {"call": "<function name>", "args": [...], "expected": ...}.\n' +
+'3. "entry_name" is the function name, and starter_code defines that function, ends with `pass`, and has one short comment hint.\n\n';
+
+    const exprRules =
+"STYLE: NO FUNCTION (the student writes plain statements)\n" +
+"1. The student must NOT write a function. They write a few lines that BUILD one or more VARIABLES.\n" +
+"   This is the style for list comprehensions, slicing, string methods, dictionary building, unpacking and so on.\n" +
+'2. Every test uses the "expr" form: {"expr": "<any python expression>", "expected": ...}. The expression is\n' +
+"   evaluated AFTER the student's code has run, so it can simply be the name of the variable they had to build.\n" +
+'3. "entry_name" must be the empty string "".\n' +
+'4. If the problem needs data to work on, put it in "setup_code" (it runs BEFORE the student\'s code) and say so in the\n' +
+"   statement, e.g. setup_code \"data = [10, 20, 30, 40, 50, 60]\\n\" and statement \"The list <code>data</code> is already defined.\"\n" +
+"5. starter_code is a short comment plus the variable already created empty, so the file always runs, e.g.\n" +
+'   "# build this with ONE list comprehension\\nsquares = []\\n".\n' +
+"6. The tests can only check the RESULT, not the technique. So write the required technique clearly in the statement,\n" +
+"   and add one test that a lazy answer would fail (a length, an element, a type, or a second harder case).\n\n";
+
+    const funcShape =
 "ANSWER WITH JSON ONLY - a list in exactly this shape, no explanation before or after:\n" +
 "[\n" +
 "  {\n" +
@@ -380,6 +515,7 @@
 '    "title": "Short title",\n' +
 '    "statement": "Write <code>example(a, b)</code> that returns ...",\n' +
 '    "entry_name": "example",\n' +
+'    "setup_code": "",\n' +
 '    "starter_code": "def example(a, b):\\n    # hint\\n    pass\\n",\n' +
 '    "tests": [\n' +
 '      {"call": "example", "args": [1, 2], "expected": 3},\n' +
@@ -389,10 +525,53 @@
 "    ]\n" +
 "  }\n" +
 "]\n\n" +
-"For a class-based problem use this test form instead: " +
-'{"expr": "Rectangle(3, 4).area()", "expected": 12}';
+"For a class-based problem use a test of this form instead: " +
+'{"expr": "Rectangle(3, 4).area()", "expected": 12}\n';
+
+    const exprShape =
+"ANSWER WITH JSON ONLY - a list in exactly this shape, no explanation before or after:\n" +
+"[\n" +
+"  {\n" +
+'    "slug": "' + slugPrefix + 'squares",\n' +
+'    "title": "Squares with a comprehension",\n' +
+'    "statement": "Using ONE list comprehension, build a list called <code>squares</code> that holds the squares of 1 to 5.",\n' +
+'    "entry_name": "",\n' +
+'    "setup_code": "",\n' +
+'    "starter_code": "# build this with ONE list comprehension\\nsquares = []\\n",\n' +
+'    "example": "squares  ->  [1, 4, 9, 16, 25]",\n' +
+'    "tests": [\n' +
+'      {"expr": "squares", "expected": [1, 4, 9, 16, 25]},\n' +
+'      {"expr": "len(squares)", "expected": 5},\n' +
+'      {"expr": "squares[0]", "expected": 1},\n' +
+'      {"expr": "squares[-1]", "expected": 25}\n' +
+"    ]\n" +
+"  },\n" +
+"  {\n" +
+'    "slug": "' + slugPrefix + 'middle-slice",\n' +
+'    "title": "The middle of a list",\n' +
+'    "statement": "The list <code>data</code> is already defined. Use slicing to put its 3rd, 4th and 5th items into <code>middle</code>.",\n' +
+'    "entry_name": "",\n' +
+'    "setup_code": "data = [10, 20, 30, 40, 50, 60]\\n",\n' +
+'    "starter_code": "# use a slice like data[a:b]\\nmiddle = []\\n",\n' +
+'    "example": "middle  ->  [30, 40, 50]",\n' +
+'    "tests": [\n' +
+'      {"expr": "middle", "expected": [30, 40, 50]},\n' +
+'      {"expr": "len(middle)", "expected": 3},\n' +
+'      {"expr": "middle[0]", "expected": 30},\n' +
+'      {"expr": "data", "expected": [10, 20, 30, 40, 50, 60]}\n' +
+"    ]\n" +
+"  }\n" +
+"]\n";
+
+    let body;
+    if (style === "expr")      body = exprRules + exprShape;
+    else if (style === "mix")  body = funcRules + exprRules +
+      "Use a mix: about half the problems in each style.\n\n" + funcShape + "\n" + exprShape;
+    else                       body = funcRules + funcShape;
+
+    $("ai-prompt").value = head + common + body;
   }
-  ["ai-week", "ai-level", "ai-count", "ai-extra"].forEach(id => {
+  ["ai-week", "ai-level", "ai-style", "ai-libs", "ai-count", "ai-extra"].forEach(id => {
     $(id).addEventListener("change", buildPrompt);
     $(id).addEventListener("keyup", buildPrompt);
   });
@@ -420,11 +599,12 @@
     const problems2 = [], errs = [];
     list.forEach((p, i) => {
       const where = "Problem " + (i + 1) + ": ";
-      if (!p.slug || !p.title || !p.entry_name) { errs.push(where + "slug, title and entry_name are required"); return; }
+      if (!p.slug || !p.title) { errs.push(where + "slug and title are required"); return; }
       if (!Array.isArray(p.tests) || p.tests.length === 0) { errs.push(where + "no tests"); return; }
       for (const t of p.tests) {
         if (!("expected" in t)) { errs.push(where + 'a test has no "expected"'); return; }
         if (!t.call && !t.expr) { errs.push(where + 'a test has no "call" or "expr"'); return; }
+        if (t.call && !p.entry_name) { errs.push(where + 'a test uses "call", so entry_name is required'); return; }
       }
       problems2.push(p);
     });
@@ -435,8 +615,10 @@
         '</div><div class="msg">problem(s) ready to add</div></div>' +
         problems2.map(p => '<div class="tcase ok"><div class="mark">✓</div><div class="body">' +
           S.esc(p.title) + ' <span class="pill">' + S.esc(p.slug) + "</span>" +
-          '<div class="sub">' + p.tests.length + " tests · function <b>" + S.esc(p.entry_name) +
-          "</b></div></div></div>").join("") : "");
+          '<div class="sub">' + p.tests.length + " tests · " + (p.entry_name
+            ? "function <b>" + S.esc(p.entry_name) + "</b>"
+            : "no function \u2014 checks the value the student builds") +
+          "</div></div></div>").join("") : "");
     if (problems2.length && !errs.length) { aiRows = problems2; $("ai-import").classList.remove("hidden"); }
   };
 
@@ -454,8 +636,10 @@
       slug: p.slug, title: p.title, statement: p.statement || p.title,
       example: p.example || (p.tests[0].expr ? p.tests[0].expr : p.entry_name + "(...)") +
                "  ->  " + JSON.stringify(p.tests[0].expected),
-      entry_name: p.entry_name,
-      starter_code: p.starter_code || ("def " + p.entry_name + "():\n    pass\n"),
+      entry_name: p.entry_name || "",
+      starter_code: p.starter_code ||
+        (p.entry_name ? "def " + p.entry_name + "():\n    pass\n"
+                      : "# write your answer below\n"),
       setup_code: p.setup_code || null,
       tests: p.tests, points: { 1: 10, 2: 15, 3: 25 }[level],
       sort_order: ++next, is_active: true
@@ -523,7 +707,8 @@
     const per = {};
     mine.slice().reverse().forEach(a => {
       const k = a.problem_id;
-      per[k] = per[k] || { week: a.week_no, tries: 0, best: 0, total: a.total_tests, solvedAt: null };
+      per[k] = per[k] || { week: weekNoLabel(a.week_no), tries: 0, best: 0,
+                           total: a.total_tests, solvedAt: null };
       per[k].tries++;
       per[k].best = Math.max(per[k].best, a.score || 0);
       if (a.passed && !per[k].solvedAt) per[k].solvedAt = a.created_at;
@@ -565,8 +750,8 @@
   };
   $("dl-attempts").onclick = () => download("scim105_attempts.csv",
     [["when", "name", "email", "week", "problem", "level", "passed", "score", "total_tests"]].concat(
-      attempts.map(a => [fmt(a.created_at), a.full_name, a.email, a.week_no, a.problem_id,
-                         a.level, a.passed, a.score, a.total_tests])));
+      attempts.map(a => [fmt(a.created_at), a.full_name, a.email, weekNoLabel(a.week_no),
+                         a.problem_id, a.level, a.passed, a.score, a.total_tests])));
   $("dl-logins").onclick = () => download("scim105_logins.csv",
     [["when", "name", "email"]].concat(
       logins.map(l => [fmt(l.logged_in_at), l.full_name, l.email])));

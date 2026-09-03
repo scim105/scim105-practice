@@ -64,15 +64,83 @@
       </div>
 
       <div id="results"></div>
+
+      <details id="scratch" class="scratch">
+        <summary>🧪 Scratch pad — run any code you like (not graded)</summary>
+        <p class="hint">Your own space to experiment: print something, try an idea, look at the data.
+          Nothing written here is checked, scored or sent to your teacher — but it is kept on this
+          computer for each problem, so it is still here when you come back.
+          The setup code of this problem runs first, so any data you were given is already available.
+          You may <code>import numpy as np</code>, <code>pandas as pd</code>, <code>scipy</code>,
+          <code>matplotlib.pyplot as plt</code> and other standard scientific libraries — a chart you
+          draw is shown underneath.</p>
+        <div class="editor-shell">
+          <div class="editor-bar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="fname">scratch.py</span>
+          </div>
+          <textarea id="scratch-code" class="fallback-editor" spellcheck="false"></textarea>
+        </div>
+        <div class="run-row">
+          <button class="btn" id="scratch-run">▶ Run this code</button>
+          <button class="btn ghost" id="scratch-clear">Clear</button>
+          <span class="status" id="scratch-status"></span>
+        </div>
+        <div id="scratch-out"></div>
+      </details>
     </div>
   </section>
 </main>
 
 <!-- The test harness that runs inside the browser's Python (Pyodide). -->
 <script type="text/x-python" id="harness">
-import json, sys, io, time
+import json, sys, io, time, ast
+
+# Code the student (or the course) wrote is compiled under these names, so the
+# watchdog below can tell it apart from library code such as numpy or pandas.
+_SCIM_FILES = ('<student>', '<setup>', '<scratch>')
+_SCIM_LIBS = "numpy, pandas, scipy, matplotlib, sympy, scikit-learn, networkx, statistics, math, random"
+
+_scim_deadline = [0.0]
+_scim_ticks = [0]
+
+
+def _scim_tracer(frame, event, arg):
+    """Stops a program that never ends. It only follows the student's own code:
+    tracing every line of pandas or numpy would make them crawl."""
+    _scim_ticks[0] += 1
+    if (_scim_ticks[0] & 0xFF) == 0 and time.time() > _scim_deadline[0]:
+        raise TimeoutError('your program ran too long - check for a loop that never ends')
+    return _scim_tracer if frame.f_code.co_filename in _SCIM_FILES else None
+
+
+def _scim_arm(limit):
+    _scim_deadline[0] = time.time() + limit
+    sys.settrace(_scim_tracer)
+
+
+def _scim_plain(v):
+    """numpy / pandas values -> ordinary Python, so that a numpy array can be
+    compared with the plain JSON list written in the test."""
+    if v is None or type(v) in (list, tuple, dict, set, str, bytes, bool, int, float):
+        return v          # exact types only, so a numpy float still gets converted
+    tolist = getattr(v, 'tolist', None)
+    if callable(tolist):
+        try:
+            return tolist()
+        except Exception:
+            return v
+    item = getattr(v, 'item', None)
+    if callable(item):
+        try:
+            return item()
+        except Exception:
+            return v
+    return v
+
 
 def _scim_cmp(got, exp):
+    got = _scim_plain(got)
     if isinstance(exp, bool) or isinstance(got, bool):
         return isinstance(exp, bool) and isinstance(got, bool) and exp == got
     if isinstance(exp, (int, float)) and isinstance(got, (int, float)):
@@ -89,50 +157,81 @@ def _scim_cmp(got, exp):
         return got is None
     return got == exp
 
+
 def _scim_label(t):
     if 'expr' in t:
         return t['expr']
     return '%s(%s)' % (t['call'], ', '.join(repr(a) for a in t.get('args', [])))
 
+
+def _scim_why(e):
+    """A short, friendly one-line explanation, with the line number when we can
+    find it inside the student's own code."""
+    msg = '%s: %s' % (type(e).__name__, e)
+    if isinstance(e, ModuleNotFoundError):
+        msg += ' - that package is not available in the browser. You can use: ' + _SCIM_LIBS
+    line = None
+    tb = getattr(e, '__traceback__', None)
+    while tb is not None:
+        if tb.tb_frame.f_code.co_filename in _SCIM_FILES:
+            line = tb.tb_lineno
+        tb = tb.tb_next
+    if line:
+        msg += '   [line %d of your code]' % line
+    return msg
+
+
+def _scim_figure():
+    """If the code drew a matplotlib chart, hand it back as a PNG."""
+    try:
+        plt = sys.modules.get('matplotlib.pyplot')
+        if plt is None or not plt.get_fignums():
+            return ''
+        import base64
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png', dpi=110, bbox_inches='tight')
+        plt.close('all')
+        return base64.b64encode(buf.getvalue()).decode()
+    except Exception:
+        return ''
+
+
 def _scim_run(code, setup, tests_json, limit):
+    """Graded run: the student's code, then every test case."""
     tests = json.loads(tests_json)
     ns = {'__name__': '__main__'}
     if setup:
         try:
-            exec(setup, ns)
+            _scim_arm(limit)
+            exec(compile(setup, '<setup>', 'exec'), ns)
         except Exception as e:
             return json.dumps({'error': 'Course setup failed - %s: %s' % (type(e).__name__, e)})
+        finally:
+            sys.settrace(None)
+
     buf = io.StringIO()
     real_stdout = sys.stdout
-    deadline = [time.time() + limit]
-
-    def _tracer(frame, event, arg):
-        if time.time() > deadline[0]:
-            raise TimeoutError('your program ran too long - check for a loop that never ends')
-        return _tracer
-
     results = []
     sys.stdout = buf
     try:
-        sys.settrace(_tracer)
+        _scim_arm(limit)
         try:
-            exec(code, ns)
+            exec(compile(code, '<student>', 'exec'), ns)
         except Exception as e:
-            return json.dumps({'error': '%s: %s' % (type(e).__name__, e), 'stdout': buf.getvalue()})
+            return json.dumps({'error': _scim_why(e), 'stdout': buf.getvalue()})
         for t in tests:
             label = _scim_label(t)
-            deadline[0] = time.time() + limit
-            sys.settrace(_tracer)      # re-arm: a raised timeout switches tracing off
+            _scim_arm(limit)          # re-arm: a raised timeout switches tracing off
             try:
                 if 'expr' in t:
-                    got = eval(t['expr'], ns)
+                    got = eval(compile(t['expr'], '<student>', 'eval'), ns)
                 else:
                     fn = ns.get(t['call'])
                     if not callable(fn):
                         raise NameError("there is no function called '%s'" % t['call'])
                     got = fn(*t.get('args', []))
                 results.append({'label': label, 'expected': repr(t.get('expected')),
-                                'got': repr(got), 'ok': _scim_cmp(got, t.get('expected'))})
+                                'got': repr(_scim_plain(got)), 'ok': _scim_cmp(got, t.get('expected'))})
             except Exception as e:
                 results.append({'label': label, 'expected': repr(t.get('expected')),
                                 'got': '%s: %s' % (type(e).__name__, e), 'ok': False})
@@ -140,6 +239,49 @@ def _scim_run(code, setup, tests_json, limit):
         sys.settrace(None)
         sys.stdout = real_stdout
     return json.dumps({'results': results, 'stdout': buf.getvalue()})
+
+
+def _scim_scratch(setup, code, limit):
+    """Scratch pad run: anything goes, nothing is graded. Shows what was printed,
+    the value of the last line, and a chart if one was drawn."""
+    out = {'stdout': '', 'value': '', 'error': '', 'image': ''}
+    ns = {'__name__': '__main__'}
+    buf = io.StringIO()
+    real_stdout = sys.stdout
+    sys.stdout = buf
+    try:
+        if setup:
+            try:
+                _scim_arm(limit)
+                exec(compile(setup, '<setup>', 'exec'), ns)
+            except Exception:
+                pass                                  # the setup is not what is being tried out
+            finally:
+                sys.settrace(None)
+        try:
+            tree = ast.parse(code)
+        except SyntaxError as e:
+            out['error'] = 'SyntaxError: %s   [line %s]' % (e.msg, e.lineno)
+            return json.dumps(out)
+        tail = None
+        if tree.body and isinstance(tree.body[-1], ast.Expr):
+            tail = ast.Expression(tree.body.pop().value)
+        try:
+            _scim_arm(limit)
+            exec(compile(tree, '<scratch>', 'exec'), ns)
+            if tail is not None:
+                value = eval(compile(tail, '<scratch>', 'eval'), ns)
+                if value is not None:
+                    out['value'] = repr(value)
+        except Exception as e:
+            out['error'] = _scim_why(e)
+        finally:
+            sys.settrace(None)
+        out['image'] = _scim_figure()
+    finally:
+        sys.stdout = real_stdout
+        out['stdout'] = buf.getvalue()
+    return json.dumps(out)
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -169,15 +311,17 @@ def _scim_run(code, setup, tests_json, limit):
   ]);
 
   const week = weekRes.data || { week_no: weekNo, title: "Week " + weekNo, subtitle: "" };
+  /* the number the students see - may be shared by several topic cards */
+  const weekLabel = (week.display_no != null ? week.display_no : week.week_no);
   const problems = probRes.data || [];
   const pointsBySlug = {};
   (allProbRes.data || []).forEach(p => { pointsBySlug[p.slug] = p.points; });
   const solved = new Set((passRes.data || []).map(a => a.problem_id));
 
   document.getElementById("week-heading").textContent =
-    S.cfg.COURSE_CODE + " · Week " + week.week_no;
+    S.cfg.COURSE_CODE + " · Week " + weekLabel;
   document.getElementById("week-sub").textContent = week.title;
-  document.title = S.cfg.COURSE_CODE + " · Week " + week.week_no;
+  document.title = S.cfg.COURSE_CODE + " · Week " + weekLabel + " · " + week.title;
 
   function refreshPoints() {
     let total = 0;
@@ -226,7 +370,7 @@ def _scim_run(code, setup, tests_json, limit):
       }).join("");
       return '<div class="level ' + (unlocked ? "unlocked" : "locked") + '">' +
              '<div class="level-head"><div class="level-num">' + lv.level + "</div><div>" +
-             "<b>Week " + week.week_no + " · " + S.esc(lv.title) + "</b>" +
+             "<b>Week " + weekLabel + " · " + S.esc(lv.title) + "</b>" +
              "<span>" + (unlocked ? S.esc(lv.subtitle) : "Finish the level above to unlock") + "</span>" +
              '</div></div><ul class="plist">' + items + "</ul></div>";
     }).join("");
@@ -265,19 +409,116 @@ def _scim_run(code, setup, tests_json, limit):
   };
   cm ? cm.on("change", onEdit) : textarea.addEventListener("input", onEdit);
 
+  /* ---------------- scratch pad (one per problem, never graded) --------- */
+  const scratchBox = document.getElementById("scratch");
+  const scratchArea = document.getElementById("scratch-code");
+  const scratchOut = document.getElementById("scratch-out");
+  const scratchStatusEl = document.getElementById("scratch-status");
+  const saySc = (t) => { scratchStatusEl.textContent = t; };
+  const SCRATCH_START =
+    "# Try anything you like here - nothing on this pad is graded.\n" +
+    "# Use print(...) to look at a value.\n\n";
+
+  let scm = null;
+  const scratchKey = (p) => "scim105:scratch:" + p.slug;
+  const getScratch = () => (scm ? scm.getValue() : scratchArea.value);
+  const setScratch = (v) => { scm ? scm.setValue(v) : (scratchArea.value = v); };
+
+  function loadScratch(p) {
+    setScratch(localStorage.getItem(scratchKey(p)) || SCRATCH_START);
+    scratchOut.innerHTML = "";
+    saySc("");
+    if (scm) setTimeout(() => scm.refresh(), 30);
+  }
+
+  let scratchTimer = null;
+  const onScratchEdit = () => {
+    clearTimeout(scratchTimer);
+    scratchTimer = setTimeout(() => {
+      if (current) localStorage.setItem(scratchKey(current), getScratch());
+    }, 400);
+  };
+  scratchArea.addEventListener("input", onScratchEdit);
+
+  /* CodeMirror measures badly inside a closed <details>, so build it on opening */
+  scratchBox.addEventListener("toggle", () => {
+    if (!scratchBox.open) return;
+    if (!scm && window.CodeMirror) {
+      scm = CodeMirror.fromTextArea(scratchArea, {
+        mode: "python", theme: "material-darker", lineNumbers: true,
+        indentUnit: 4, tabSize: 4, indentWithTabs: false, lineWrapping: true,
+        extraKeys: { Tab: (c) => c.replaceSelection("    ") }
+      });
+      scm.on("change", onScratchEdit);
+    }
+    if (scm) setTimeout(() => scm.refresh(), 30);
+  });
+
+  document.getElementById("scratch-clear").onclick = () => {
+    if (current) localStorage.removeItem(scratchKey(current));
+    setScratch(SCRATCH_START);
+    scratchOut.innerHTML = "";
+    saySc("");
+  };
+
+  const scratchBtn = document.getElementById("scratch-run");
+  scratchBtn.onclick = async function () {
+    if (!current) return;
+    const code = getScratch();
+    scratchBtn.disabled = true;
+    scratchOut.innerHTML = "";
+    try {
+      const py = await python(saySc);
+      const source = (current.setup_code || "") + "\n" + code;
+      await prepare(py, source, saySc);
+      saySc("Running…");
+      const fn = py.globals.get("_scim_scratch");
+      const raw = fn(current.setup_code || "", code, limitFor(source));
+      fn.destroy && fn.destroy();
+      const out = JSON.parse(raw);
+      saySc("");
+
+      const printed = (out.stdout || "").replace(/\s+$/, "");
+      let html = "";
+      if (out.image) {
+        html += '<img class="figure" alt="the chart your code drew" ' +
+                'src="data:image/png;base64,' + out.image + '">';
+      }
+      if (printed) html += '<div class="stdout">' + S.esc(printed) + "</div>";
+      if (out.value) html += '<div class="stdout value">' + S.esc(out.value) + "</div>";
+      if (out.error) {
+        html += '<div class="result-head fail"><div class="msg">' + S.esc(out.error) + "</div></div>";
+      }
+      if (!html) {
+        html = '<div class="stdout">It ran, but nothing came out. ' +
+               "Add print(\u2026) - or put a value on the last line - to see something.</div>";
+      }
+      scratchOut.innerHTML = html;
+    } catch (err) {
+      saySc("");
+      scratchOut.innerHTML =
+        '<div class="result-head fail"><div class="msg">Could not run that: ' +
+        S.esc(err.message) + "</div></div>";
+    } finally {
+      scratchBtn.disabled = false;
+    }
+  };
+
   /* ---------------- show one problem ---------------- */
   function select(p) {
     if (!p) return;
     current = p;
     document.getElementById("crumbs").textContent =
-      "Level " + p.level + " · Week " + week.week_no + " · " + (p.level_title || "");
+      "Level " + p.level + " · Week " + weekLabel + " · " + (p.level_title || "");
     document.getElementById("p-title").textContent = p.title;
     document.getElementById("p-statement").innerHTML = p.statement;
     document.getElementById("p-example").textContent = p.example || "";
     document.getElementById("fname").textContent = (p.entry_name || "solution") + ".py";
+    document.getElementById("p-example").className = p.example ? "example" : "example hidden";
     document.getElementById("results").innerHTML = "";
     document.getElementById("status").textContent = "";
     setCode(localStorage.getItem(draftKey(p)) || p.starter_code || "");
+    loadScratch(p);
     renderPath();
     if (cm) setTimeout(() => cm.refresh(), 30);
   }
@@ -316,6 +557,28 @@ def _scim_run(code, setup, tests_json, limit):
   const statusEl = document.getElementById("status");
   const setStatus = (t) => { statusEl.textContent = t; };
 
+  /* ---------------- scientific libraries ---------------- */
+  /* Pyodide fetches a package the first time some code imports it, then the
+     browser keeps it. Packages are big, so a run that uses one gets more time. */
+  const BASE_LIMIT = S.cfg.RUN_TIMEOUT_SECONDS || 6;
+  const LIB_RE =
+    /\b(numpy|pandas|scipy|matplotlib|sympy|sklearn|networkx|statsmodels|PIL|pytz|dateutil)\b/;
+  const limitFor = (source) => LIB_RE.test(source) ? Math.max(BASE_LIMIT, 30) : BASE_LIMIT;
+
+  async function prepare(py, source, say) {
+    if (!LIB_RE.test(source)) return;
+    say("Getting the libraries your code imports… the first time this can take a minute.");
+    try {
+      await py.loadPackagesFromImports(source, { messageCallback: () => {}, errorCallback: () => {} });
+    } catch (e) {
+      /* an unknown package is reported by Python itself, with a friendlier message */
+    }
+    if (/matplotlib/.test(source)) {
+      /* draw into a picture instead of onto a canvas the page does not have */
+      try { py.runPython("import matplotlib\nmatplotlib.use('AGG')\n"); } catch (e) {}
+    }
+  }
+
   document.getElementById("reset").onclick = () => {
     if (!current) return;
     if (!confirm("Replace your code with the original starter code?")) return;
@@ -330,11 +593,12 @@ def _scim_run(code, setup, tests_json, limit):
     document.getElementById("results").innerHTML = "";
     try {
       const py = await python(setStatus);
+      const source = (current.setup_code || "") + "\n" + code;
+      await prepare(py, source, setStatus);
       setStatus("Running your code…");
       const runner = py.globals.get("_scim_run");
       const raw = runner(code, current.setup_code || "",
-                         JSON.stringify(current.tests || []),
-                         S.cfg.RUN_TIMEOUT_SECONDS || 6);
+                         JSON.stringify(current.tests || []), limitFor(source));
       runner.destroy && runner.destroy();
       const out = JSON.parse(raw);
       setStatus("");

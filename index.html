@@ -100,8 +100,13 @@
     if (solved.has(p.slug)) doneByWeek[p.week_no] = (doneByWeek[p.week_no] || 0) + 1;
   });
 
+  /* `display_no` is the number on the card and may repeat (two "Week 3" cards
+     with different topics). `week_no` stays the hidden unique key in the link. */
+  const disp = (w) => (w.display_no != null ? w.display_no : w.week_no);
+
   const box = document.getElementById("weeks");
-  const weeks = weeksRes.data || [];
+  const weeks = (weeksRes.data || []).slice().sort((a, b) =>
+    (disp(a) - disp(b)) || (a.sort_order - b.sort_order) || (a.id - b.id));
   if (!weeks.length) {
     box.innerHTML = '<div class="panel"><h3>No weeks yet</h3><p class="hint">Run ' +
       '<code>sql/02_seed.sql</code> in Supabase, or add weeks from the Admin page.</p></div>';
@@ -116,7 +121,7 @@
       ? '<div class="prog">' + done + " of " + total + ' solved<div class="bar"><i style="width:' + pct + '%"></i></div></div>'
       : "";
     const inner =
-      '<div class="row1"><span class="week-no">Week ' + w.week_no + '</span>' +
+      '<div class="row1"><span class="week-no">Week ' + disp(w) + '</span>' +
       '<span class="badge ' + (open ? "open" : "soon") + '">' + (open ? "Open" : "Soon") + "</span></div>" +
       "<h3>" + S.esc(w.title) + "</h3><p>" + S.esc(w.subtitle || "") + "</p>" + progress;
     return open
